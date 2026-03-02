@@ -1,7 +1,6 @@
 package com.hasanzade.calixy_mobile
-import UserPreferences
+
 import com.google.firebase.auth.FirebaseAuth
-import com.hasanzade.calixy_mobile.AuthResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await

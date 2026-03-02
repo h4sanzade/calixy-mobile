@@ -1,6 +1,5 @@
 package com.hasanzade.calixy_mobile
 
-import AuthRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow

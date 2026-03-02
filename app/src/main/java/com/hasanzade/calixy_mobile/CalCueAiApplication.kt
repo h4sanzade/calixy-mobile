@@ -1,7 +1,5 @@
 package com.hasanzade.calixy_mobile
 
-import AuthRepository
-import UserPreferences
 import android.app.Application
 import android.content.Context
 import androidx.datastore.core.DataStore

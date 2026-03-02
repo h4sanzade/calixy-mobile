@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.hasanzade.calcueai.databinding.FragmentLoginBinding
 import com.hasanzade.calixy_mobile.databinding.FragmentLoginBinding
 import kotlinx.coroutines.launch
 
