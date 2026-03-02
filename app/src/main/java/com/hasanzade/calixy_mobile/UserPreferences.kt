@@ -1,3 +1,4 @@
+package com.hasanzade.calixy_mobile
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey

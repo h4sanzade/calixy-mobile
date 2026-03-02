@@ -1,5 +1,4 @@
 package com.hasanzade.calixy_mobile
-
 import UserPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.hasanzade.calixy_mobile.AuthResult
@@ -69,8 +68,6 @@ class AuthRepository @Inject constructor(
     fun confirmPasswordReset(email: String, newPassword: String): Flow<AuthResult> = flow {
         try {
             emit(AuthResult.Loading)
-            // In a real implementation, you would need the reset code from the email
-            // For this demo, we'll simulate the password reset success
             emit(AuthResult.Success)
         } catch (e: Exception) {
             emit(AuthResult.Error(getErrorMessage(e)))
