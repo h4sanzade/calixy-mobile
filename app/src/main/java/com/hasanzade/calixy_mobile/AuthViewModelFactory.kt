@@ -10,15 +10,12 @@ class AuthViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
-            modelClass.isAssignableFrom(AuthViewModel::class.java) -> {
+            modelClass.isAssignableFrom(AuthViewModel::class.java) ->
                 AuthViewModel(authRepository, authRepository.userPreferences) as T
-            }
-            modelClass.isAssignableFrom(VerificationViewModel::class.java) -> {
+            modelClass.isAssignableFrom(VerificationViewModel::class.java) ->
                 VerificationViewModel(authRepository) as T
-            }
-            modelClass.isAssignableFrom(ResetPasswordViewModel::class.java) -> {
+            modelClass.isAssignableFrom(ResetPasswordViewModel::class.java) ->
                 ResetPasswordViewModel(authRepository) as T
-            }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

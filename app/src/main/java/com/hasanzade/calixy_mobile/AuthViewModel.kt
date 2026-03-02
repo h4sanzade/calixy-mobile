@@ -25,17 +25,17 @@ class AuthViewModel @Inject constructor(
     fun signIn(email: String, password: String) {
         if (validateLoginInput(email, password)) {
             viewModelScope.launch {
-                authRepository.signInWithEmailAndPassword(email, password).collect {
+                authRepository.login(email, password).collect {
                     _authState.value = it
                 }
             }
         }
     }
 
-    fun signUp(email: String, password: String, fullName: String) {
-        if (validateSignUpInput(email, password, fullName)) {
+    fun signUp(email: String, password: String, firstName: String, lastName: String) {
+        if (validateSignUpInput(email, password, firstName, lastName)) {
             viewModelScope.launch {
-                authRepository.signUpWithEmailAndPassword(email, password, fullName).collect {
+                authRepository.register(firstName, lastName, email, password).collect {
                     _authState.value = it
                 }
             }
@@ -45,28 +45,12 @@ class AuthViewModel @Inject constructor(
     fun sendPasswordReset(email: String) {
         if (isValidEmail(email)) {
             viewModelScope.launch {
-                authRepository.sendPasswordResetEmail(email).collect {
+                authRepository.forgotPassword(email).collect {
                     _authState.value = it
                 }
             }
         } else {
             _authState.value = AuthResult.Error("Please enter correct email")
-        }
-    }
-
-    fun resendVerificationEmail() {
-        viewModelScope.launch {
-            authRepository.resendEmailVerification().collect {
-                _authState.value = it
-            }
-        }
-    }
-
-    fun checkEmailVerification() {
-        viewModelScope.launch {
-            authRepository.checkEmailVerification().collect {
-                _authState.value = it
-            }
         }
     }
 
@@ -80,38 +64,34 @@ class AuthViewModel @Inject constructor(
         val emailError = if (email.isBlank()) "Email is required"
         else if (!isValidEmail(email)) "Please enter correct email"
         else null
-
         val passwordError = if (password.isBlank()) "Password is required"
         else if (password.length < 6) "Please enter correct password"
         else null
-
         _loginValidation.value = LoginValidation(emailError, passwordError)
-
         return emailError == null && passwordError == null
     }
 
-    private fun validateSignUpInput(email: String, password: String, fullName: String): Boolean {
-        val nameError = if (fullName.isBlank()) "Full name is required" else null
+    private fun validateSignUpInput(
+        email: String,
+        password: String,
+        firstName: String,
+        lastName: String
+    ): Boolean {
+        val firstNameError = if (firstName.isBlank()) "First name is required" else null
+        val lastNameError = if (lastName.isBlank()) "Last name is required" else null
         val emailError = if (email.isBlank()) "Email is required"
         else if (!isValidEmail(email)) "Please enter correct email"
         else null
         val passwordError = if (password.isBlank()) "Password is required"
         else if (password.length < 6) "Password must be at least 6 characters"
         else null
-
-        _signUpValidation.value = SignUpValidation(nameError, emailError, passwordError)
-
-        return nameError == null && emailError == null && passwordError == null
+        _signUpValidation.value = SignUpValidation(firstNameError, lastNameError, emailError, passwordError)
+        return firstNameError == null && lastNameError == null && emailError == null && passwordError == null
     }
 
-    private fun isValidEmail(email: String): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
+    private fun isValidEmail(email: String) = Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
-    fun resetAuthState() {
-        _authState.value = null
-    }
-
+    fun resetAuthState() { _authState.value = null }
     fun clearValidationErrors() {
         _loginValidation.value = LoginValidation()
         _signUpValidation.value = SignUpValidation()
@@ -124,7 +104,8 @@ data class LoginValidation(
 )
 
 data class SignUpValidation(
-    val nameError: String? = null,
+    val firstNameError: String? = null,
+    val lastNameError: String? = null,
     val emailError: String? = null,
     val passwordError: String? = null
 )

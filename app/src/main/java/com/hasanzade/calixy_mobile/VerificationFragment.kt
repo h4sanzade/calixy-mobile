@@ -22,7 +22,7 @@ class VerificationFragment : Fragment() {
 
     private val viewModel: VerificationViewModel by viewModels {
         AuthViewModelFactory(
-            FirebaseModule.provideAuthRepository(requireContext())
+            AppModule.provideAuthRepository(requireContext())
         )
     }
 
@@ -41,7 +41,6 @@ class VerificationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.resetVerificationState()
         getArgumentsFromBundle()
         initOtpInputs()
         setupOtpInputs()
@@ -49,7 +48,9 @@ class VerificationFragment : Fragment() {
         observeViewModel()
         updateEmailDisplay()
 
-        viewModel.sendOtpEmail(emailArg)
+        // API-yə request atmırıq, backend register/forgot-password zamanı
+        // kodu artıq email-ə göndərib, sadəcə timer-i başladırıq
+        viewModel.startVerification(emailArg)
     }
 
     private fun getArgumentsFromBundle() {
@@ -76,9 +77,11 @@ class VerificationFragment : Fragment() {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    // Növbəti inputa keç
                     if (s?.length == 1 && index < otpInputs.size - 1) {
                         otpInputs[index + 1].requestFocus()
                     }
+                    otpInputs.forEach { it.setBackgroundResource(R.drawable.otp_box_normal) }
                     updateOtpCode()
                 }
 
@@ -103,7 +106,7 @@ class VerificationFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.verifyButton.setOnClickListener {
-            viewModel.verifyOtp()
+            viewModel.verifyOtp(isFromSignUpArg)
         }
 
         binding.backButton.setOnClickListener {
@@ -126,20 +129,12 @@ class VerificationFragment : Fragment() {
                     is AuthResult.Success -> {
                         binding.verifyButton.isEnabled = true
                         binding.verifyButton.text = "Verify"
-                        if (isFromSignUpArg) {
-                            findNavController().navigate(R.id.action_verificationFragment_to_loginFragment)
-                        } else {
-                            val bundle = Bundle().apply {
-                                putString("email", emailArg)
-                            }
-                            findNavController().navigate(R.id.action_verificationFragment_to_resetPasswordFragment, bundle)
-                        }
+                        navigateOnSuccess()
                         viewModel.resetVerificationState()
                     }
                     is AuthResult.Error -> {
                         binding.verifyButton.isEnabled = true
                         binding.verifyButton.text = "Verify"
-
                         if (result.message == "Wrong") {
                             otpInputs.forEach { it.setBackgroundResource(R.drawable.otp_box_error) }
                         }
@@ -168,6 +163,25 @@ class VerificationFragment : Fragment() {
                 binding.resendCodeText.isEnabled = canResend
                 binding.resendCodeText.alpha = if (canResend) 1.0f else 0.5f
             }
+        }
+    }
+
+    private fun navigateOnSuccess() {
+        if (isFromSignUpArg) {
+            // Register flow → login ekranına
+            findNavController().navigate(
+                R.id.action_verificationFragment_to_loginFragment
+            )
+        } else {
+            // Forgot password flow → reset password ekranına
+            // OTP kodunu da bundle-a əlavə edirik (ResetPassword üçün lazımdır)
+            val bundle = Bundle().apply {
+                putString("email", emailArg)
+                putString("code", viewModel.otpCode.value)
+            }
+            findNavController().navigate(
+                R.id.action_verificationFragment_to_resetPasswordFragment, bundle
+            )
         }
     }
 

@@ -10,9 +10,8 @@ class SplashViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
-            modelClass.isAssignableFrom(SplashViewModel::class.java) -> {
+            modelClass.isAssignableFrom(SplashViewModel::class.java) ->
                 SplashViewModel(userPreferences) as T
-            }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

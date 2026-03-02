@@ -22,7 +22,7 @@ class LoginFragment : Fragment() {
 
     private val viewModel: AuthViewModel by viewModels {
         AuthViewModelFactory(
-            FirebaseModule.provideAuthRepository(requireContext())
+            AppModule.provideAuthRepository(requireContext())
         )
     }
 
@@ -77,6 +77,8 @@ class LoginFragment : Fragment() {
                     is AuthResult.Success -> {
                         binding.loginButton.isEnabled = true
                         binding.loginButton.text = "Log In"
+                        findNavController().navigate(R.id.action_loginFragment_to_forgotPasswordFragment)
+                        viewModel.resetAuthState()
                     }
                     is AuthResult.Error -> {
                         binding.loginButton.isEnabled = true
@@ -94,17 +96,21 @@ class LoginFragment : Fragment() {
             viewModel.loginValidation.collect { validation ->
                 if (validation.emailError != null) {
                     binding.emailInputLayout.error = validation.emailError
-                    binding.emailInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
+                    binding.emailInputLayout.boxStrokeColor =
+                        ContextCompat.getColor(requireContext(), R.color.red)
                 } else {
                     binding.emailInputLayout.error = null
-                    binding.emailInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
+                    binding.emailInputLayout.boxStrokeColor =
+                        ContextCompat.getColor(requireContext(), R.color.gray)
                 }
                 if (validation.passwordError != null) {
                     binding.passwordInputLayout.error = validation.passwordError
-                    binding.passwordInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
+                    binding.passwordInputLayout.boxStrokeColor =
+                        ContextCompat.getColor(requireContext(), R.color.red)
                 } else {
                     binding.passwordInputLayout.error = null
-                    binding.passwordInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
+                    binding.passwordInputLayout.boxStrokeColor =
+                        ContextCompat.getColor(requireContext(), R.color.gray)
                 }
             }
         }

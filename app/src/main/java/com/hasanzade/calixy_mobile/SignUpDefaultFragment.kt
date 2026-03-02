@@ -24,7 +24,7 @@ class SignUpDefaultFragment : Fragment() {
 
     private val viewModel: AuthViewModel by viewModels {
         AuthViewModelFactory(
-            FirebaseModule.provideAuthRepository(requireContext())
+            AppModule.provideAuthRepository(requireContext())
         )
     }
 
@@ -56,10 +56,11 @@ class SignUpDefaultFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.signUpButton.setOnClickListener {
-            val fullName = binding.fullNameEditText.text.toString().trim()
+            val firstName = binding.firstNameEditText.text.toString().trim()
+            val lastName = binding.lastNameEditText.text.toString().trim()
             val email = binding.emailSignupEditText.text.toString().trim()
             val password = binding.passwordSignupEditText.text.toString().trim()
-            viewModel.signUp(email, password, fullName)
+            viewModel.signUp(email, password, firstName, lastName)
         }
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
@@ -107,26 +108,41 @@ class SignUpDefaultFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.signUpValidation.collect { validation ->
-                    if (validation.nameError != null) {
-                        binding.fullNameLayout.error = validation.nameError
-                        binding.fullNameLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
+                    if (validation.firstNameError != null) {
+                        binding.firstNameLayout.error = validation.firstNameError
+                        binding.firstNameLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.red)
                     } else {
-                        binding.fullNameLayout.error = null
-                        binding.fullNameLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
+                        binding.firstNameLayout.error = null
+                        binding.firstNameLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.gray)
+                    }
+                    if (validation.lastNameError != null) {
+                        binding.lastNameLayout.error = validation.lastNameError
+                        binding.lastNameLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.red)
+                    } else {
+                        binding.lastNameLayout.error = null
+                        binding.lastNameLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.gray)
                     }
                     if (validation.emailError != null) {
                         binding.emailSignupLayout.error = validation.emailError
-                        binding.emailSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
+                        binding.emailSignupLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.red)
                     } else {
                         binding.emailSignupLayout.error = null
-                        binding.emailSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
+                        binding.emailSignupLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.gray)
                     }
                     if (validation.passwordError != null) {
                         binding.passwordSignupLayout.error = validation.passwordError
-                        binding.passwordSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
+                        binding.passwordSignupLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.red)
                     } else {
                         binding.passwordSignupLayout.error = null
-                        binding.passwordSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
+                        binding.passwordSignupLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.gray)
                     }
                 }
             }

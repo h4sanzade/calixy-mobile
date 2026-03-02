@@ -16,10 +16,10 @@ class ResetPasswordViewModel(
     private val _passwordValidation = MutableStateFlow(PasswordValidation())
     val passwordValidation: StateFlow<PasswordValidation> = _passwordValidation
 
-    fun resetPassword(email: String, newPassword: String, confirmPassword: String) {
+    fun resetPassword(email: String, code: String, newPassword: String, confirmPassword: String) {
         if (validatePasswords(newPassword, confirmPassword)) {
             viewModelScope.launch {
-                authRepository.confirmPasswordReset(email, newPassword).collect {
+                authRepository.resetPassword(email, code, newPassword).collect {
                     _resetPasswordState.value = it
                 }
             }
@@ -41,13 +41,8 @@ class ResetPasswordViewModel(
         return newPasswordError == null && confirmPasswordError == null
     }
 
-    fun clearValidationErrors() {
-        _passwordValidation.value = PasswordValidation()
-    }
-
-    fun resetState() {
-        _resetPasswordState.value = null
-    }
+    fun clearValidationErrors() { _passwordValidation.value = PasswordValidation() }
+    fun resetState() { _resetPasswordState.value = null }
 }
 
 data class PasswordValidation(

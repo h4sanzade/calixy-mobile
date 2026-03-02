@@ -1,4 +1,3 @@
-
 package com.hasanzade.calixy_mobile
 
 import android.animation.AnimatorSet
@@ -11,16 +10,14 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
-
 
 class SplashFragment : Fragment() {
 
     private val viewModel: SplashViewModel by viewModels {
         SplashViewModelFactory(
-            FirebaseModule.provideUserPreferences(requireContext())
+            AppModule.provideUserPreferences(requireContext())
         )
     }
 
@@ -33,7 +30,6 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         startAnimation(view)
         observeNavigation()
     }
@@ -43,7 +39,6 @@ class SplashFragment : Fragment() {
         val aiText = view.findViewById<View>(R.id.ai_text)
         val sloganText = view.findViewById<View>(R.id.slogan_text)
 
-        // Set initial alpha to 0
         calCueText.alpha = 0f
         aiText.alpha = 0f
         sloganText.alpha = 0f
@@ -53,19 +48,16 @@ class SplashFragment : Fragment() {
             duration = 1000
             interpolator = AccelerateDecelerateInterpolator()
         }
-
         val fadeInAi = ObjectAnimator.ofFloat(aiText, "alpha", 0f, 1f).apply {
             duration = 800
             startDelay = 500
             interpolator = AccelerateDecelerateInterpolator()
         }
-
         val slideUpSlogan = ObjectAnimator.ofFloat(sloganText, "translationY", 100f, 0f).apply {
             duration = 800
             startDelay = 1000
             interpolator = AccelerateDecelerateInterpolator()
         }
-
         val fadeInSlogan = ObjectAnimator.ofFloat(sloganText, "alpha", 0f, 1f).apply {
             duration = 800
             startDelay = 1000
@@ -82,21 +74,12 @@ class SplashFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.navigationState.collect { state ->
                 when (state) {
-                    is SplashNavigationState.NavigateToOnboarding -> {
-                        findNavController().navigate(
-                            R.id.action_splashScreenFragment_to_firstOnBoardingFragment
-                        )
-                    }
-                    is SplashNavigationState.NavigateToLogin -> {
-                        findNavController().navigate(
-                            R.id.action_splashScreenFragment_to_loginFragment
-                        )
-                    }
-                    is SplashNavigationState.NavigateToMain -> {
-                        findNavController().navigate(
-                            R.id.action_splashScreenFragment_to_loginFragment // ← müvəqqəti login-ə yönləndir
-                        )
-                    }
+                    is SplashNavigationState.NavigateToOnboarding ->
+                        findNavController().navigate(R.id.action_splashScreenFragment_to_firstOnBoardingFragment)
+                    is SplashNavigationState.NavigateToLogin ->
+                        findNavController().navigate(R.id.action_splashScreenFragment_to_loginFragment)
+                    is SplashNavigationState.NavigateToMain ->
+                        findNavController().navigate(R.id.action_splashScreenFragment_to_firstOnBoardingFragment)
                     else -> {}
                 }
             }

@@ -1,4 +1,5 @@
 package com.hasanzade.calixy_mobile
+
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -18,42 +19,35 @@ class UserPreferences @Inject constructor(
         val USER_EMAIL = stringPreferencesKey("user_email")
         val USER_NAME = stringPreferencesKey("user_name")
         val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
+        val ACCESS_TOKEN = stringPreferencesKey("access_token")
+        val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
     }
 
-    val isFirstLaunch: Flow<Boolean> = dataStore.data.map { preferences ->
-        preferences[IS_FIRST_LAUNCH] ?: true
-    }
-
-    val isLoggedIn: Flow<Boolean> = dataStore.data.map { preferences ->
-        preferences[IS_LOGGED_IN] ?: false
-    }
-
-    val userEmail: Flow<String> = dataStore.data.map { preferences ->
-        preferences[USER_EMAIL] ?: ""
-    }
-
-    val userName: Flow<String> = dataStore.data.map { preferences ->
-        preferences[USER_NAME] ?: ""
-    }
+    val isFirstLaunch: Flow<Boolean> = dataStore.data.map { it[IS_FIRST_LAUNCH] ?: true }
+    val isLoggedIn: Flow<Boolean> = dataStore.data.map { it[IS_LOGGED_IN] ?: false }
+    val userEmail: Flow<String> = dataStore.data.map { it[USER_EMAIL] ?: "" }
+    val userName: Flow<String> = dataStore.data.map { it[USER_NAME] ?: "" }
+    val accessToken: Flow<String> = dataStore.data.map { it[ACCESS_TOKEN] ?: "" }
+    val refreshToken: Flow<String> = dataStore.data.map { it[REFRESH_TOKEN] ?: "" }
 
     suspend fun setFirstLaunchCompleted() {
-        dataStore.edit { preferences ->
-            preferences[IS_FIRST_LAUNCH] = false
-        }
+        dataStore.edit { it[IS_FIRST_LAUNCH] = false }
     }
 
-    suspend fun saveUserData(email: String, name: String) {
-        dataStore.edit { preferences ->
-            preferences[USER_EMAIL] = email
-            preferences[USER_NAME] = name
-            preferences[IS_LOGGED_IN] = true
+    suspend fun saveUserData(email: String, name: String, accessToken: String, refreshToken: String) {
+        dataStore.edit { prefs ->
+            prefs[USER_EMAIL] = email
+            prefs[USER_NAME] = name
+            prefs[IS_LOGGED_IN] = true
+            prefs[ACCESS_TOKEN] = accessToken
+            prefs[REFRESH_TOKEN] = refreshToken
         }
     }
 
     suspend fun clearUserData() {
-        dataStore.edit { preferences ->
-            preferences.clear()
-            preferences[IS_FIRST_LAUNCH] = false
+        dataStore.edit { prefs ->
+            prefs.clear()
+            prefs[IS_FIRST_LAUNCH] = false
         }
     }
 }

@@ -19,7 +19,7 @@ class ForgotPasswordFragment : Fragment() {
 
     private val viewModel: AuthViewModel by viewModels {
         AuthViewModelFactory(
-            FirebaseModule.provideAuthRepository(requireContext())
+            AppModule.provideAuthRepository(requireContext())
         )
     }
 
@@ -33,7 +33,6 @@ class ForgotPasswordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.resetAuthState()
         setupClickListeners()
         observeViewModel()
@@ -61,26 +60,28 @@ class ForgotPasswordFragment : Fragment() {
                     is AuthResult.Loading -> {
                         binding.resetLinkButton.isEnabled = false
                         binding.resetLinkButton.text = "Sending..."
+                        clearEmailError()
                     }
                     is AuthResult.Success -> {
                         binding.resetLinkButton.isEnabled = true
                         binding.resetLinkButton.text = "Send Reset Link"
+                        clearEmailError()
+
+                        // Verification ekranına keç — isFromSignUp = false (forgot password flow)
                         val email = binding.emailEditText.text.toString().trim()
                         val bundle = Bundle().apply {
                             putString("email", email)
                             putBoolean("isFromSignUp", false)
                         }
-                        findNavController().navigate(R.id.action_forgotPasswordFragment_to_verificationFragment, bundle)
+                        findNavController().navigate(
+                            R.id.action_forgotPasswordFragment_to_verificationFragment, bundle
+                        )
                         viewModel.resetAuthState()
                     }
                     is AuthResult.Error -> {
                         binding.resetLinkButton.isEnabled = true
                         binding.resetLinkButton.text = "Send Reset Link"
-
-                        if (result.message.contains("email")) {
-                            binding.emailInputLayout.error = result.message
-                            binding.emailInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
-                        }
+                        showEmailError(result.message)
                     }
                     else -> {
                         binding.resetLinkButton.isEnabled = true
@@ -89,6 +90,18 @@ class ForgotPasswordFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showEmailError(message: String) {
+        binding.emailInputLayout.error = message
+        binding.emailInputLayout.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.red)
+    }
+
+    private fun clearEmailError() {
+        binding.emailInputLayout.error = null
+        binding.emailInputLayout.boxStrokeColor =
+            ContextCompat.getColor(requireContext(), R.color.gray)
     }
 
     override fun onDestroyView() {

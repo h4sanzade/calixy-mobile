@@ -10,12 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 
-
 class ThirdOnBoardingFragment : Fragment() {
 
     private val viewModel: AuthViewModel by viewModels {
         AuthViewModelFactory(
-            FirebaseModule.provideAuthRepository(requireContext())
+            AppModule.provideAuthRepository(requireContext())
         )
     }
 
@@ -28,7 +27,6 @@ class ThirdOnBoardingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupClickListener(view)
     }
 
@@ -42,13 +40,10 @@ class ThirdOnBoardingFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 viewModel.completeOnboarding()
-
-                // Navigate to login screen
                 findNavController().navigate(
                     R.id.action_thirdOnBoardingFragment_to_loginFragment
                 )
             } catch (e: Exception) {
-                // Handle any potential errors
                 findNavController().navigate(
                     R.id.action_thirdOnBoardingFragment_to_loginFragment
                 )

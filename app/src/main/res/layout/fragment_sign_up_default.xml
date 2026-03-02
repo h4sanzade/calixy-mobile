@@ -48,10 +48,10 @@
     </TextView>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/full_name_layout"
+        android:id="@+id/first_name_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Enter Full Name"
+        android:hint="First Name"
         app:boxStrokeColor="#E6E5E5"
         app:boxBackgroundMode="outline"
         android:padding="8dp"
@@ -63,11 +63,34 @@
         android:layout_marginEnd="20dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/full_name_edit_text"
+            android:id="@+id/first_name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
+            android:inputType="textPersonName"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/last_name_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Last Name"
+        app:boxStrokeColor="#E6E5E5"
+        app:boxBackgroundMode="outline"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/first_name_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/last_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:inputType="textPersonName"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -80,7 +103,7 @@
         app:boxStrokeColor="#E6E5E5"
         app:boxBackgroundMode="outline"
         android:padding="8dp"
-        app:layout_constraintTop_toBottomOf="@id/full_name_layout"
+        app:layout_constraintTop_toBottomOf="@id/last_name_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
@@ -92,7 +115,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-
             android:inputType="textEmailAddress"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -116,7 +138,6 @@
             android:id="@+id/password_signup_edit_text"
             android:layout_width="match_parent"
             android:textColor="@color/white"
-
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:singleLine="true" />
@@ -134,7 +155,7 @@
         android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
         app:cornerRadius="8dp"
-        android:layout_marginTop="150dp">
+        android:layout_marginTop="80dp">
     </com.google.android.material.button.MaterialButton>
 
     <TextView

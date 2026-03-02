@@ -1,121 +1,141 @@
 package com.hasanzade.calixy_mobile
 
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AuthRepository @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
+    private val apiService: ApiService,
     val userPreferences: UserPreferences
 ) {
 
-    fun signUpWithEmailAndPassword(email: String, password: String, fullName: String): Flow<AuthResult> = flow {
+    fun register(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String
+    ): Flow<AuthResult> = flow {
+        emit(AuthResult.Loading)
         try {
-            emit(AuthResult.Loading)
-            val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-            val user = result.user
-            if (user != null) {
-//                user.sendEmailVerification().await()
-                userPreferences.saveUserData(email, fullName)
+            val response = apiService.register(
+                RegisterRequest(firstName, lastName, email, password)
+            )
+            if (response.isSuccessful) {
                 emit(AuthResult.Success)
             } else {
-                emit(AuthResult.Error("Registration failed"))
+                emit(AuthResult.Error(parseError(response.code())))
             }
         } catch (e: Exception) {
-            emit(AuthResult.Error(getErrorMessage(e)))
+            emit(AuthResult.Error(networkError(e)))
         }
     }
 
-    fun signInWithEmailAndPassword(email: String, password: String): Flow<AuthResult> = flow {
+    fun login(email: String, password: String): Flow<AuthResult> = flow {
+        emit(AuthResult.Loading)
         try {
-            emit(AuthResult.Loading)
-            val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-            val user = result.user
-            if (user != null) {
-                if (user.isEmailVerified) {
-                    userPreferences.saveUserData(email, user.displayName ?: "")
-                    emit(AuthResult.Success)
-                } else {
-                    emit(AuthResult.Error("Please verify your email first"))
-                }
-            } else {
-                emit(AuthResult.Error("Login failed"))
-            }
-        } catch (e: Exception) {
-            emit(AuthResult.Error(getErrorMessage(e)))
-        }
-    }
-
-    fun sendPasswordResetEmail(email: String): Flow<AuthResult> = flow {
-        try {
-            emit(AuthResult.Loading)
-            firebaseAuth.sendPasswordResetEmail(email).await()
-            emit(AuthResult.Success)
-        } catch (e: Exception) {
-            emit(AuthResult.Error(getErrorMessage(e)))
-        }
-    }
-
-    fun confirmPasswordReset(email: String, newPassword: String): Flow<AuthResult> = flow {
-        try {
-            emit(AuthResult.Loading)
-            emit(AuthResult.Success)
-        } catch (e: Exception) {
-            emit(AuthResult.Error(getErrorMessage(e)))
-        }
-    }
-
-    fun resendEmailVerification(): Flow<AuthResult> = flow {
-        try {
-            emit(AuthResult.Loading)
-            val user = firebaseAuth.currentUser
-            if (user != null) {
-                user.sendEmailVerification().await()
+            val response = apiService.login(LoginRequest(email, password))
+            if (response.isSuccessful) {
+                val body = response.body()
+                val accessToken = body?.accessToken ?: ""
+                val refreshToken = body?.refreshToken ?: ""
+                val user = body?.user
+                val fullName = "${user?.firstName.orEmpty()} ${user?.lastName.orEmpty()}".trim()
+                userPreferences.saveUserData(email, fullName, accessToken, refreshToken)
                 emit(AuthResult.Success)
             } else {
-                emit(AuthResult.Error("User not found"))
+                emit(AuthResult.Error(parseError(response.code())))
             }
         } catch (e: Exception) {
-            emit(AuthResult.Error(getErrorMessage(e)))
+            emit(AuthResult.Error(networkError(e)))
         }
     }
 
-    fun checkEmailVerification(): Flow<AuthResult> = flow {
+    fun verifyEmail(email: String, code: String): Flow<AuthResult> = flow {
+        emit(AuthResult.Loading)
         try {
-            emit(AuthResult.Loading)
-            val user = firebaseAuth.currentUser
-            if (user != null) {
-                user.reload().await()
-                if (user.isEmailVerified) {
-                    emit(AuthResult.Success)
-                } else {
-                    emit(AuthResult.Error("Email not verified yet"))
-                }
+            val response = apiService.verifyEmail(VerifyEmailRequest(email, code))
+            if (response.isSuccessful) {
+                emit(AuthResult.Success)
             } else {
-                emit(AuthResult.Error("User not found"))
+                emit(AuthResult.Error("Wrong"))
             }
         } catch (e: Exception) {
-            emit(AuthResult.Error(getErrorMessage(e)))
+            emit(AuthResult.Error(networkError(e)))
         }
     }
 
-    suspend fun signOut() {
-        firebaseAuth.signOut()
-        userPreferences.clearUserData()
+    fun resendVerification(email: String): Flow<AuthResult> = flow {
+        emit(AuthResult.Loading)
+        try {
+            val response = apiService.resendVerification(ResendVerificationRequest(email))
+            if (response.isSuccessful) {
+                emit(AuthResult.Success)
+            } else {
+                emit(AuthResult.Error(parseError(response.code())))
+            }
+        } catch (e: Exception) {
+            emit(AuthResult.Error(networkError(e)))
+        }
     }
 
-    private fun getErrorMessage(exception: Exception): String {
-        return when {
-            exception.message?.contains("badly formatted") == true -> "Please enter correct email"
-            exception.message?.contains("invalid") == true -> "Please enter correct password"
-            exception.message?.contains("no user record") == true -> "Please enter correct email"
-            exception.message?.contains("already in use") == true -> "This email is already registered"
-            exception.message?.contains("too weak") == true -> "Password must be at least 6 characters"
-            else -> exception.message ?: "An error occurred"
+    fun forgotPassword(email: String): Flow<AuthResult> = flow {
+        emit(AuthResult.Loading)
+        try {
+            val response = apiService.forgotPassword(ForgotPasswordRequest(email))
+            if (response.isSuccessful) {
+                emit(AuthResult.Success)
+            } else {
+                emit(AuthResult.Error(parseError(response.code())))
+            }
+        } catch (e: Exception) {
+            emit(AuthResult.Error(networkError(e)))
         }
+    }
+
+    fun resetPassword(email: String, code: String, newPassword: String): Flow<AuthResult> = flow {
+        emit(AuthResult.Loading)
+        try {
+            val response = apiService.resetPassword(ResetPasswordRequest(email, code, newPassword))
+            if (response.isSuccessful) {
+                emit(AuthResult.Success)
+            } else {
+                emit(AuthResult.Error(parseError(response.code())))
+            }
+        } catch (e: Exception) {
+            emit(AuthResult.Error(networkError(e)))
+        }
+    }
+
+    suspend fun logout() {
+        try {
+            val accessToken = userPreferences.accessToken.first()
+            val refreshToken = userPreferences.refreshToken.first()
+            if (accessToken.isNotEmpty()) {
+                apiService.logout("Bearer $accessToken", refreshToken)
+            }
+        } catch (e: Exception) {
+            // local data-nı hər halda silirik
+        } finally {
+            userPreferences.clearUserData()
+        }
+    }
+
+    private fun parseError(code: Int): String = when (code) {
+        400 -> "Invalid request"
+        401 -> "Email or password is incorrect"
+        404 -> "User not found"
+        409 -> "This email is already registered"
+        422 -> "Please check your information"
+        500 -> "Server error, please try again"
+        else -> "An error occurred"
+    }
+
+    private fun networkError(e: Exception): String {
+        return if (e.message?.contains("Unable to resolve host") == true ||
+            e.message?.contains("timeout") == true
+        ) "No internet connection" else "An error occurred"
     }
 }
