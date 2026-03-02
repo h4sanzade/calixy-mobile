@@ -1,4 +1,4 @@
-package com.hasanzade.calcueai
+package com.hasanzade.calixy_mobile
 
 import android.app.Dialog
 import android.graphics.Color
@@ -13,8 +13,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
-import com.hasanzade.calixy_mobile.R
-import com.hasanzade.calixy_mobile.ResetPaswordFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -35,7 +33,6 @@ class DialogPasswordChangedFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupDialog()
         setupClickListener(view)
         makeBackgroundBlur()
@@ -45,11 +42,7 @@ class DialogPasswordChangedFragment : DialogFragment() {
         dialog?.window?.apply {
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-
-            // Make dialog not cancelable
             isCancelable = false
-
-            // Set dialog to appear above everything
             setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
@@ -64,31 +57,18 @@ class DialogPasswordChangedFragment : DialogFragment() {
     }
 
     private fun makeBackgroundBlur() {
-        // Make the background fragment appear blurred/dimmed
-        val parentFragment = parentFragmentManager.fragments.find {
-            it is ResetPaswordFragment
-        }
+        val parentFragment = parentFragmentManager.fragments.find { it is ResetPaswordFragment }
         parentFragment?.view?.alpha = 0.3f
     }
 
     private fun navigateToLogin() {
         lifecycleScope.launch {
             try {
-                // Restore background fragment alpha
-                val parentFragment = parentFragmentManager.fragments.find {
-                    it is ResetPaswordFragment
-                }
+                val parentFragment = parentFragmentManager.fragments.find { it is ResetPaswordFragment }
                 parentFragment?.view?.alpha = 1.0f
-
-                // Small delay for better UX
                 delay(200)
-
-                // Navigate to login and clear back stack
-                findNavController().navigate(
-                    R.id.action_dialogPasswordChangedFragment_to_loginFragment
-                )
+                findNavController().navigate(R.id.action_dialogPasswordChangedFragment_to_loginFragment)
             } catch (e: Exception) {
-                // Fallback navigation
                 findNavController().popBackStack(R.id.loginFragment, false)
             }
         }
@@ -104,10 +84,7 @@ class DialogPasswordChangedFragment : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // Restore background fragment alpha when dialog is destroyed
-        val parentFragment = parentFragmentManager.fragments.find {
-            it is ResetPaswordFragment
-        }
+        val parentFragment = parentFragmentManager.fragments.find { it is ResetPaswordFragment }
         parentFragment?.view?.alpha = 1.0f
     }
 }

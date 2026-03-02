@@ -16,10 +16,8 @@ class AuthRepository @Inject constructor(
     fun signUpWithEmailAndPassword(email: String, password: String, fullName: String): Flow<AuthResult> = flow {
         try {
             emit(AuthResult.Loading)
-
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             val user = result.user
-
             if (user != null) {
                 user.sendEmailVerification().await()
                 userPreferences.saveUserData(email, fullName)
@@ -35,10 +33,8 @@ class AuthRepository @Inject constructor(
     fun signInWithEmailAndPassword(email: String, password: String): Flow<AuthResult> = flow {
         try {
             emit(AuthResult.Loading)
-
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             val user = result.user
-
             if (user != null) {
                 if (user.isEmailVerified) {
                     userPreferences.saveUserData(email, user.displayName ?: "")

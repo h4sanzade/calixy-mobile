@@ -36,7 +36,6 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.resetAuthState()
         setupSignUpText()
         setupClickListeners()
@@ -47,17 +46,9 @@ class LoginFragment : Fragment() {
         val fullText = "Don't have an account? Sign Up"
         val spannableString = SpannableString(fullText)
         val orangeColor = ContextCompat.getColor(requireContext(), R.color.orange)
-
         val startIndex = fullText.indexOf("Sign Up")
         val endIndex = startIndex + "Sign Up".length
-
-        spannableString.setSpan(
-            ForegroundColorSpan(orangeColor),
-            startIndex,
-            endIndex,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
+        spannableString.setSpan(ForegroundColorSpan(orangeColor), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.signUpText.text = spannableString
     }
 
@@ -67,11 +58,9 @@ class LoginFragment : Fragment() {
             val password = binding.passwordEditText.text.toString().trim()
             viewModel.signIn(email, password)
         }
-
         binding.forgotPasswordText.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_forgotPasswordFragment)
         }
-
         binding.signUpText.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_signUpDefaultFragment)
         }
@@ -110,7 +99,6 @@ class LoginFragment : Fragment() {
                     binding.emailInputLayout.error = null
                     binding.emailInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
                 }
-
                 if (validation.passwordError != null) {
                     binding.passwordInputLayout.error = validation.passwordError
                     binding.passwordInputLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)

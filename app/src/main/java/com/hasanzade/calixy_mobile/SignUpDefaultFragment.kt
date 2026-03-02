@@ -36,7 +36,6 @@ class SignUpDefaultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.resetAuthState()
         setupLoginText()
         setupClickListeners()
@@ -47,17 +46,9 @@ class SignUpDefaultFragment : Fragment() {
         val fullText = "Already have an account? Log in"
         val spannableString = SpannableString(fullText)
         val orangeColor = ContextCompat.getColor(requireContext(), R.color.orange)
-
         val startIndex = fullText.indexOf("Log in")
         val endIndex = startIndex + "Log in".length
-
-        spannableString.setSpan(
-            ForegroundColorSpan(orangeColor),
-            startIndex,
-            endIndex,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
+        spannableString.setSpan(ForegroundColorSpan(orangeColor), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.loginText.text = spannableString
     }
 
@@ -68,11 +59,9 @@ class SignUpDefaultFragment : Fragment() {
             val password = binding.passwordSignupEditText.text.toString().trim()
             viewModel.signUp(email, password, fullName)
         }
-
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
-
         binding.loginText.setOnClickListener {
             findNavController().navigate(R.id.action_signUpDefaultFragment_to_loginFragment)
         }
@@ -89,7 +78,6 @@ class SignUpDefaultFragment : Fragment() {
                     is AuthResult.Success -> {
                         binding.signUpButton.isEnabled = true
                         binding.signUpButton.text = "Sign Up"
-
                         val email = binding.emailSignupEditText.text.toString().trim()
                         val bundle = Bundle().apply {
                             putString("email", email)
@@ -119,7 +107,6 @@ class SignUpDefaultFragment : Fragment() {
                     binding.fullNameLayout.error = null
                     binding.fullNameLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
                 }
-
                 if (validation.emailError != null) {
                     binding.emailSignupLayout.error = validation.emailError
                     binding.emailSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
@@ -127,7 +114,6 @@ class SignUpDefaultFragment : Fragment() {
                     binding.emailSignupLayout.error = null
                     binding.emailSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
                 }
-
                 if (validation.passwordError != null) {
                     binding.passwordSignupLayout.error = validation.passwordError
                     binding.passwordSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)

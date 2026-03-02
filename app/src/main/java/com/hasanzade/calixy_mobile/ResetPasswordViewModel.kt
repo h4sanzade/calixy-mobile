@@ -32,15 +32,12 @@ class ResetPasswordViewModel(
             newPassword.length < 6 -> "Password must be at least 6 characters"
             else -> null
         }
-
         val confirmPasswordError = when {
             confirmPassword.isBlank() -> "Confirm password is required"
             newPassword != confirmPassword -> "Passwords don't match"
             else -> null
         }
-
         _passwordValidation.value = PasswordValidation(newPasswordError, confirmPasswordError)
-
         return newPasswordError == null && confirmPasswordError == null
     }
 

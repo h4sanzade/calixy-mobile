@@ -35,7 +35,6 @@ class ResetPaswordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.resetState()
         getArgumentsFromBundle()
         setupClickListeners()
@@ -54,7 +53,6 @@ class ResetPaswordFragment : Fragment() {
             val confirmPassword = binding.confirmPasswordEditText.text.toString().trim()
             viewModel.resetPassword(emailArg, newPassword, confirmPassword)
         }
-
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -71,7 +69,6 @@ class ResetPaswordFragment : Fragment() {
                     is AuthResult.Success -> {
                         binding.resetPasswordButton.isEnabled = true
                         binding.resetPasswordButton.text = "Reset Password"
-
                         viewModel.resetState()
                         findNavController().navigate(R.id.action_resetPasswordFragment_to_dialogPasswordChangedFragment)
                     }
@@ -96,7 +93,6 @@ class ResetPaswordFragment : Fragment() {
                     binding.newPasswordLayout.error = null
                     binding.newPasswordLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
                 }
-
                 if (validation.confirmPasswordError != null) {
                     binding.confirmPasswordLayout.error = validation.confirmPasswordError
                     binding.confirmPasswordLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)

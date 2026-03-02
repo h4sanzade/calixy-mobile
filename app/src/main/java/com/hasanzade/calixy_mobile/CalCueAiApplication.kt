@@ -8,20 +8,15 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
+
 class CalCueAiApplication : Application() {
-
-    val dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
-
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
     }
 }
 
-// DI Extensions for DataStore
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
-
-// Firebase Extensions
 object FirebaseModule {
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
