@@ -67,14 +67,12 @@ class ForgotPasswordFragment : Fragment() {
                         binding.resetLinkButton.text = "Send Reset Link"
                         clearEmailError()
 
-                        // Verification ekranına keç — isFromSignUp = false (forgot password flow)
                         val email = binding.emailEditText.text.toString().trim()
                         val bundle = Bundle().apply {
                             putString("email", email)
-                            putBoolean("isFromSignUp", false)
                         }
                         findNavController().navigate(
-                            R.id.action_forgotPasswordFragment_to_verificationFragment, bundle
+                            R.id.resetPasswordFragment, bundle
                         )
                         viewModel.resetAuthState()
                     }

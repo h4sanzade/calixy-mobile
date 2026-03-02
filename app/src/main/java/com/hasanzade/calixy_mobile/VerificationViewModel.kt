@@ -26,14 +26,7 @@ class VerificationViewModel(
     private var currentEmail: String = ""
     private var countDownTimer: CountDownTimer? = null
 
-    // Register sonrası verification başlayanda çağırılır
     fun startVerification(email: String) {
-        currentEmail = email
-        startResendTimer()
-    }
-
-    // Forgot password sonrası da eyni ekran istifadə olunur
-    fun sendOtpEmail(email: String) {
         currentEmail = email
         startResendTimer()
     }
@@ -47,10 +40,18 @@ class VerificationViewModel(
             _verificationState.value = AuthResult.Error("Wrong")
             return
         }
-        viewModelScope.launch {
-            authRepository.verifyEmail(currentEmail, _otpCode.value).collect {
-                _verificationState.value = it
+
+        if (isFromSignUp) {
+            // ✅ Sign-up flow: backend-ə verify-email göndər
+            viewModelScope.launch {
+                authRepository.verifyEmail(currentEmail, _otpCode.value).collect {
+                    _verificationState.value = it
+                }
             }
+        } else {
+            // ✅ Forgot-password flow: kodu yoxlamırıq, birbaşa Success emit edirik
+            // Kod reset-password endpoint-ində yoxlanılacaq
+            _verificationState.value = AuthResult.Success
         }
     }
 

@@ -19,16 +19,14 @@ class ResetPaswordFragment : Fragment() {
 
     private val viewModel: ResetPasswordViewModel by viewModels {
         AuthViewModelFactory(
-            FirebaseModule.provideAuthRepository(requireContext())
+            AppModule.provideAuthRepository(requireContext())
         )
     }
 
     private var emailArg: String = ""
+    private var codeArg: String = ""
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentResetPaswordBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,6 +42,7 @@ class ResetPaswordFragment : Fragment() {
     private fun getArgumentsFromBundle() {
         arguments?.let { bundle ->
             emailArg = bundle.getString("email", "")
+            codeArg = bundle.getString("code", "") // ✅ Added
         }
     }
 
@@ -51,7 +50,8 @@ class ResetPaswordFragment : Fragment() {
         binding.resetPasswordButton.setOnClickListener {
             val newPassword = binding.newPasswordEditText.text.toString().trim()
             val confirmPassword = binding.confirmPasswordEditText.text.toString().trim()
-            viewModel.resetPassword(emailArg, newPassword, confirmPassword)
+            // ✅ Fixed: pass codeArg
+            viewModel.resetPassword(emailArg, codeArg, newPassword, confirmPassword)
         }
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
@@ -70,7 +70,7 @@ class ResetPaswordFragment : Fragment() {
                         binding.resetPasswordButton.isEnabled = true
                         binding.resetPasswordButton.text = "Reset Password"
                         viewModel.resetState()
-                        findNavController().navigate(R.id.action_resetPasswordFragment_to_dialogPasswordChangedFragment)
+                        findNavController().navigate(R.id.action_resetPasswordFragment_to_loginFragment)
                     }
                     is AuthResult.Error -> {
                         binding.resetPasswordButton.isEnabled = true

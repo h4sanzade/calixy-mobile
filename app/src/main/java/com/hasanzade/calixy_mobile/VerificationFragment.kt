@@ -48,8 +48,7 @@ class VerificationFragment : Fragment() {
         observeViewModel()
         updateEmailDisplay()
 
-        // API-yə request atmırıq, backend register/forgot-password zamanı
-        // kodu artıq email-ə göndərib, sadəcə timer-i başladırıq
+
         viewModel.startVerification(emailArg)
     }
 
@@ -168,16 +167,12 @@ class VerificationFragment : Fragment() {
 
     private fun navigateOnSuccess() {
         if (isFromSignUpArg) {
-            // Register flow → login ekranına
-            findNavController().navigate(
-                R.id.action_verificationFragment_to_loginFragment
-            )
+            findNavController().navigate(R.id.action_verificationFragment_to_loginFragment)
         } else {
-            // Forgot password flow → reset password ekranına
-            // OTP kodunu da bundle-a əlavə edirik (ResetPassword üçün lazımdır)
+            val code = viewModel.otpCode.value
             val bundle = Bundle().apply {
                 putString("email", emailArg)
-                putString("code", viewModel.otpCode.value)
+                putString("code", code)
             }
             findNavController().navigate(
                 R.id.action_verificationFragment_to_resetPasswordFragment, bundle

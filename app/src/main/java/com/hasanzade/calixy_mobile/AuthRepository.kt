@@ -12,22 +12,12 @@ class AuthRepository @Inject constructor(
     val userPreferences: UserPreferences
 ) {
 
-    fun register(
-        firstName: String,
-        lastName: String,
-        email: String,
-        password: String
-    ): Flow<AuthResult> = flow {
+    fun register(firstName: String, lastName: String, email: String, password: String): Flow<AuthResult> = flow {
         emit(AuthResult.Loading)
         try {
-            val response = apiService.register(
-                RegisterRequest(firstName, lastName, email, password)
-            )
-            if (response.isSuccessful) {
-                emit(AuthResult.Success)
-            } else {
-                emit(AuthResult.Error(parseError(response.code())))
-            }
+            val response = apiService.register(RegisterRequest(firstName, lastName, email, password))
+            if (response.isSuccessful) emit(AuthResult.Success)
+            else emit(AuthResult.Error(parseError(response.code())))
         } catch (e: Exception) {
             emit(AuthResult.Error(networkError(e)))
         }
@@ -57,11 +47,8 @@ class AuthRepository @Inject constructor(
         emit(AuthResult.Loading)
         try {
             val response = apiService.verifyEmail(VerifyEmailRequest(email, code))
-            if (response.isSuccessful) {
-                emit(AuthResult.Success)
-            } else {
-                emit(AuthResult.Error("Wrong"))
-            }
+            if (response.isSuccessful) emit(AuthResult.Success)
+            else emit(AuthResult.Error("Wrong"))
         } catch (e: Exception) {
             emit(AuthResult.Error(networkError(e)))
         }
@@ -71,11 +58,8 @@ class AuthRepository @Inject constructor(
         emit(AuthResult.Loading)
         try {
             val response = apiService.resendVerification(ResendVerificationRequest(email))
-            if (response.isSuccessful) {
-                emit(AuthResult.Success)
-            } else {
-                emit(AuthResult.Error(parseError(response.code())))
-            }
+            if (response.isSuccessful) emit(AuthResult.Success)
+            else emit(AuthResult.Error(parseError(response.code())))
         } catch (e: Exception) {
             emit(AuthResult.Error(networkError(e)))
         }
@@ -85,11 +69,8 @@ class AuthRepository @Inject constructor(
         emit(AuthResult.Loading)
         try {
             val response = apiService.forgotPassword(ForgotPasswordRequest(email))
-            if (response.isSuccessful) {
-                emit(AuthResult.Success)
-            } else {
-                emit(AuthResult.Error(parseError(response.code())))
-            }
+            if (response.isSuccessful) emit(AuthResult.Success)
+            else emit(AuthResult.Error(parseError(response.code())))
         } catch (e: Exception) {
             emit(AuthResult.Error(networkError(e)))
         }
@@ -99,7 +80,53 @@ class AuthRepository @Inject constructor(
         emit(AuthResult.Loading)
         try {
             val response = apiService.resetPassword(ResetPasswordRequest(email, code, newPassword))
+            if (response.isSuccessful) emit(AuthResult.Success)
+            else emit(AuthResult.Error(parseError(response.code())))
+        } catch (e: Exception) {
+            emit(AuthResult.Error(networkError(e)))
+        }
+    }
+
+    fun refreshToken(): Flow<AuthResult> = flow {
+        emit(AuthResult.Loading)
+        try {
+            val token = userPreferences.refreshToken.first()
+            if (token.isEmpty()) {
+                emit(AuthResult.Error("No refresh token"))
+                return@flow
+            }
+            val response = apiService.refreshToken(RefreshTokenRequest(token))
             if (response.isSuccessful) {
+                val body = response.body()
+                val newAccess = body?.accessToken ?: ""
+                val newRefresh = body?.refreshToken ?: token
+                val email = userPreferences.userEmail.first()
+                val name = userPreferences.userName.first()
+                userPreferences.saveUserData(email, name, newAccess, newRefresh)
+                emit(AuthResult.Success)
+            } else {
+                emit(AuthResult.Error(parseError(response.code())))
+            }
+        } catch (e: Exception) {
+            emit(AuthResult.Error(networkError(e)))
+        }
+    }
+
+    fun updateMe(firstName: String, lastName: String, phoneNumber: String? = null): Flow<AuthResult> = flow {
+        emit(AuthResult.Loading)
+        try {
+            val accessToken = userPreferences.accessToken.first()
+            val response = apiService.updateMe(
+                "Bearer $accessToken",
+                UpdateMeRequest(firstName, lastName, phoneNumber)
+            )
+            if (response.isSuccessful) {
+                val user = response.body()
+                val fullName = "${user?.firstName.orEmpty()} ${user?.lastName.orEmpty()}".trim()
+                val email = userPreferences.userEmail.first()
+                val currentAccess = userPreferences.accessToken.first()
+                val currentRefresh = userPreferences.refreshToken.first()
+                userPreferences.saveUserData(email, fullName, currentAccess, currentRefresh)
                 emit(AuthResult.Success)
             } else {
                 emit(AuthResult.Error(parseError(response.code())))
@@ -117,7 +144,6 @@ class AuthRepository @Inject constructor(
                 apiService.logout("Bearer $accessToken", refreshToken)
             }
         } catch (e: Exception) {
-            // local data-nı hər halda silirik
         } finally {
             userPreferences.clearUserData()
         }

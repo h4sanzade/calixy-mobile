@@ -77,7 +77,7 @@ class LoginFragment : Fragment() {
                     is AuthResult.Success -> {
                         binding.loginButton.isEnabled = true
                         binding.loginButton.text = "Log In"
-                        findNavController().navigate(R.id.action_loginFragment_to_forgotPasswordFragment)
+                        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                         viewModel.resetAuthState()
                     }
                     is AuthResult.Error -> {

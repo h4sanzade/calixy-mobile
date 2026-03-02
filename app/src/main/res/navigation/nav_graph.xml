@@ -49,6 +49,10 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
     </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.hasanzade.calixy_mobile.HomeFragment"
+        android:label="Home" />
 
     <fragment
         android:id="@+id/thirdOnBoardingFragment"
@@ -62,8 +66,17 @@
             app:exitAnim="@anim/slide_out_left"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 
+    <action
+        android:id="@+id/action_dialogPasswordChangedFragment_to_loginFragment"
+        app:destination="@id/loginFragment" />
+    <action
+        android:id="@+id/action_resetPasswordFragment_to_loginFragment"
+        app:destination="@id/loginFragment" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.hasanzade.calixy_mobile.LoginFragment"
