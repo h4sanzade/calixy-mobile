@@ -48,6 +48,8 @@ class VerificationFragment : Fragment() {
         setupClickListeners()
         observeViewModel()
         updateEmailDisplay()
+
+        viewModel.sendOtpEmail(emailArg)
     }
 
     private fun getArgumentsFromBundle() {
@@ -109,7 +111,7 @@ class VerificationFragment : Fragment() {
         }
 
         binding.resendCodeText.setOnClickListener {
-            viewModel.resendCode()
+            viewModel.resendCode(emailArg)
         }
     }
 
@@ -124,8 +126,6 @@ class VerificationFragment : Fragment() {
                     is AuthResult.Success -> {
                         binding.verifyButton.isEnabled = true
                         binding.verifyButton.text = "Verify"
-
-                        viewModel.resetVerificationState()
                         if (isFromSignUpArg) {
                             findNavController().navigate(R.id.action_verificationFragment_to_loginFragment)
                         } else {
@@ -134,6 +134,7 @@ class VerificationFragment : Fragment() {
                             }
                             findNavController().navigate(R.id.action_verificationFragment_to_resetPasswordFragment, bundle)
                         }
+                        viewModel.resetVerificationState()
                     }
                     is AuthResult.Error -> {
                         binding.verifyButton.isEnabled = true
@@ -171,7 +172,7 @@ class VerificationFragment : Fragment() {
     }
 
     private fun updateEmailDisplay() {
-        binding.emailDisplay.text = "Enter the code we've sent by text to \n$emailArg"
+        binding.emailDisplay.text = "Enter the code we've sent to\n$emailArg"
     }
 
     override fun onDestroyView() {

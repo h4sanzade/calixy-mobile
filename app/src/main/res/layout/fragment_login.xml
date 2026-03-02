@@ -52,6 +52,7 @@
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:inputType="textEmailAddress"
             android:singleLine="true" />
 
@@ -76,6 +77,7 @@
             android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:inputType="textPassword"
             android:singleLine="true" />
 

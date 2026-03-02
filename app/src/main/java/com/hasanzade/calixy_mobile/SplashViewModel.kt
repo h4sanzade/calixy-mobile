@@ -1,6 +1,5 @@
 package com.hasanzade.calixy_mobile
 
-import UserPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay

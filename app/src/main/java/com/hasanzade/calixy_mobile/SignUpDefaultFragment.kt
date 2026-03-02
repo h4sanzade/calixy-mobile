@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.hasanzade.calixy_mobile.databinding.FragmentSignUpDefaultBinding
 import kotlinx.coroutines.launch
@@ -68,58 +70,64 @@ class SignUpDefaultFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        lifecycleScope.launch {
-            viewModel.authState.collect { result ->
-                when (result) {
-                    is AuthResult.Loading -> {
-                        binding.signUpButton.isEnabled = false
-                        binding.signUpButton.text = "Creating Account..."
-                    }
-                    is AuthResult.Success -> {
-                        binding.signUpButton.isEnabled = true
-                        binding.signUpButton.text = "Sign Up"
-                        val email = binding.emailSignupEditText.text.toString().trim()
-                        val bundle = Bundle().apply {
-                            putString("email", email)
-                            putBoolean("isFromSignUp", true)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.authState.collect { result ->
+                    when (result) {
+                        is AuthResult.Loading -> {
+                            binding.signUpButton.isEnabled = false
+                            binding.signUpButton.text = "Creating Account..."
                         }
-                        viewModel.resetAuthState()
-                        findNavController().navigate(R.id.action_signUpDefaultFragment_to_verificationFragment, bundle)
-                    }
-                    is AuthResult.Error -> {
-                        binding.signUpButton.isEnabled = true
-                        binding.signUpButton.text = "Sign Up"
-                    }
-                    else -> {
-                        binding.signUpButton.isEnabled = true
-                        binding.signUpButton.text = "Sign Up"
+                        is AuthResult.Success -> {
+                            binding.signUpButton.isEnabled = true
+                            binding.signUpButton.text = "Sign Up"
+                            val email = binding.emailSignupEditText.text.toString().trim()
+                            val bundle = Bundle().apply {
+                                putString("email", email)
+                                putBoolean("isFromSignUp", true)
+                            }
+                            findNavController().navigate(
+                                R.id.action_signUpDefaultFragment_to_verificationFragment, bundle
+                            )
+                            viewModel.resetAuthState()
+                        }
+                        is AuthResult.Error -> {
+                            binding.signUpButton.isEnabled = true
+                            binding.signUpButton.text = "Sign Up"
+                        }
+                        else -> {
+                            binding.signUpButton.isEnabled = true
+                            binding.signUpButton.text = "Sign Up"
+                        }
                     }
                 }
             }
         }
 
-        lifecycleScope.launch {
-            viewModel.signUpValidation.collect { validation ->
-                if (validation.nameError != null) {
-                    binding.fullNameLayout.error = validation.nameError
-                    binding.fullNameLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
-                } else {
-                    binding.fullNameLayout.error = null
-                    binding.fullNameLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
-                }
-                if (validation.emailError != null) {
-                    binding.emailSignupLayout.error = validation.emailError
-                    binding.emailSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
-                } else {
-                    binding.emailSignupLayout.error = null
-                    binding.emailSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
-                }
-                if (validation.passwordError != null) {
-                    binding.passwordSignupLayout.error = validation.passwordError
-                    binding.passwordSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
-                } else {
-                    binding.passwordSignupLayout.error = null
-                    binding.passwordSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.signUpValidation.collect { validation ->
+                    if (validation.nameError != null) {
+                        binding.fullNameLayout.error = validation.nameError
+                        binding.fullNameLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
+                    } else {
+                        binding.fullNameLayout.error = null
+                        binding.fullNameLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
+                    }
+                    if (validation.emailError != null) {
+                        binding.emailSignupLayout.error = validation.emailError
+                        binding.emailSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
+                    } else {
+                        binding.emailSignupLayout.error = null
+                        binding.emailSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
+                    }
+                    if (validation.passwordError != null) {
+                        binding.passwordSignupLayout.error = validation.passwordError
+                        binding.passwordSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.red)
+                    } else {
+                        binding.passwordSignupLayout.error = null
+                        binding.passwordSignupLayout.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.gray)
+                    }
                 }
             }
         }

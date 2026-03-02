@@ -70,6 +70,7 @@
             android:inputType="number"
             android:gravity="center"
             android:textSize="18sp"
+            android:textColor="@color/white"
             android:background="@drawable/otp_box"
             android:maxLength="1"/>
 
@@ -82,6 +83,8 @@
             android:gravity="center"
             android:textSize="18sp"
             android:background="@drawable/otp_box"
+            android:textColor="@color/white"
+
             android:maxLength="1"/>
 
         <EditText
@@ -93,6 +96,8 @@
             android:gravity="center"
             android:textSize="18sp"
             android:background="@drawable/otp_box"
+            android:textColor="@color/white"
+
             android:maxLength="1"/>
 
         <EditText
@@ -103,6 +108,7 @@
             android:inputType="number"
             android:gravity="center"
             android:textSize="18sp"
+            android:textColor="@color/white"
 
             android:background="@drawable/otp_box"
             android:maxLength="1"/>
@@ -115,6 +121,8 @@
             android:inputType="number"
             android:gravity="center"
             android:textSize="18sp"
+            android:textColor="@color/white"
+
             android:background="@drawable/otp_box"
             android:maxLength="1"/>
 
@@ -124,6 +132,8 @@
             android:layout_height="50dp"
             android:layout_margin="8dp"
             android:inputType="number"
+            android:textColor="@color/white"
+
             android:gravity="center"
             android:textSize="18sp"
             android:background="@drawable/otp_box"

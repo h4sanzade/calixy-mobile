@@ -50,24 +50,24 @@ class SplashFragment : Fragment() {
         sloganText.translationY = 100f
 
         val fadeInCalCue = ObjectAnimator.ofFloat(calCueText, "alpha", 0f, 1f).apply {
-            ObjectAnimator.setDuration = 1000
+            duration = 1000
             interpolator = AccelerateDecelerateInterpolator()
         }
 
         val fadeInAi = ObjectAnimator.ofFloat(aiText, "alpha", 0f, 1f).apply {
-            ObjectAnimator.setDuration = 800
+            duration = 800
             startDelay = 500
             interpolator = AccelerateDecelerateInterpolator()
         }
 
         val slideUpSlogan = ObjectAnimator.ofFloat(sloganText, "translationY", 100f, 0f).apply {
-            ObjectAnimator.setDuration = 800
+            duration = 800
             startDelay = 1000
             interpolator = AccelerateDecelerateInterpolator()
         }
 
         val fadeInSlogan = ObjectAnimator.ofFloat(sloganText, "alpha", 0f, 1f).apply {
-            ObjectAnimator.setDuration = 800
+            duration = 800
             startDelay = 1000
             interpolator = AccelerateDecelerateInterpolator()
         }
@@ -93,6 +93,9 @@ class SplashFragment : Fragment() {
                         )
                     }
                     is SplashNavigationState.NavigateToMain -> {
+                        findNavController().navigate(
+                            R.id.action_splashScreenFragment_to_loginFragment // ← müvəqqəti login-ə yönləndir
+                        )
                     }
                     else -> {}
                 }

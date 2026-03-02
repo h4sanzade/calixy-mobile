@@ -19,7 +19,7 @@ class AuthRepository @Inject constructor(
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             val user = result.user
             if (user != null) {
-                user.sendEmailVerification().await()
+//                user.sendEmailVerification().await()
                 userPreferences.saveUserData(email, fullName)
                 emit(AuthResult.Success)
             } else {

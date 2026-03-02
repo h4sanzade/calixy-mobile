@@ -65,14 +65,13 @@ class ForgotPasswordFragment : Fragment() {
                     is AuthResult.Success -> {
                         binding.resetLinkButton.isEnabled = true
                         binding.resetLinkButton.text = "Send Reset Link"
-
                         val email = binding.emailEditText.text.toString().trim()
                         val bundle = Bundle().apply {
                             putString("email", email)
                             putBoolean("isFromSignUp", false)
                         }
-                        viewModel.resetAuthState()
                         findNavController().navigate(R.id.action_forgotPasswordFragment_to_verificationFragment, bundle)
+                        viewModel.resetAuthState()
                     }
                     is AuthResult.Error -> {
                         binding.resetLinkButton.isEnabled = true

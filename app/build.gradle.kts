@@ -3,12 +3,27 @@ plugins {
     alias(libs.plugins.kotlin.android)
     kotlin("kapt")
 
-    id("com.google.gms.google-services") // apply plugin aktiv
+    id("com.google.gms.google-services")
 }
 
 android {
     namespace = "com.hasanzade.calixy_mobile"
     compileSdk = 36
+
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/native-image/**",
+                "META-INF/*.kotlin_module",
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt"
+            )
+        }
+
+    }
 
     buildFeatures{
         viewBinding = true
@@ -64,8 +79,6 @@ dependencies {
     implementation("androidx.camera:camera-video:1.3.3")
 
     // Image / Video Processing
-    implementation("com.github.bumptech.glide:glide:4.17.0")
-    implementation("org.bytedeco:javacv-platform:1.5.8")
 
     // Networking
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -106,4 +119,7 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
+
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
 }
