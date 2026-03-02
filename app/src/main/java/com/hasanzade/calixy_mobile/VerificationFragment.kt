@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.hasanzade.calixy_mobile.databinding.FragmentLoginVerificationBinding
 import kotlinx.coroutines.launch
@@ -48,7 +50,6 @@ class VerificationFragment : Fragment() {
         observeViewModel()
         updateEmailDisplay()
 
-
         viewModel.startVerification(emailArg)
     }
 
@@ -76,7 +77,6 @@ class VerificationFragment : Fragment() {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    // Növbəti inputa keç
                     if (s?.length == 1 && index < otpInputs.size - 1) {
                         otpInputs[index + 1].requestFocus()
                     }
@@ -118,65 +118,84 @@ class VerificationFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        lifecycleScope.launch {
-            viewModel.verificationState.collect { result ->
-                when (result) {
-                    is AuthResult.Loading -> {
-                        binding.verifyButton.isEnabled = false
-                        binding.verifyButton.text = "Verifying..."
-                    }
-                    is AuthResult.Success -> {
-                        binding.verifyButton.isEnabled = true
-                        binding.verifyButton.text = "Verify"
-                        navigateOnSuccess()
-                        viewModel.resetVerificationState()
-                    }
-                    is AuthResult.Error -> {
-                        binding.verifyButton.isEnabled = true
-                        binding.verifyButton.text = "Verify"
-                        if (result.message == "Wrong") {
-                            otpInputs.forEach { it.setBackgroundResource(R.drawable.otp_box_error) }
+        // ✅ repeatOnLifecycle istifadə et - fragment detach olduqda collect dayansın
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.verificationState.collect { result ->
+                    when (result) {
+                        is AuthResult.Loading -> {
+                            binding.verifyButton.isEnabled = false
+                            binding.verifyButton.text = "Verifying..."
+                        }
+                        is AuthResult.Success -> {
+                            binding.verifyButton.isEnabled = true
+                            binding.verifyButton.text = "Verify"
+                            viewModel.resetVerificationState()
+                            // ✅ Fragment hələ attached-dirmi yoxla
+                            if (isAdded && _binding != null) {
+                                navigateOnSuccess()
+                            }
+                        }
+                        is AuthResult.Error -> {
+                            binding.verifyButton.isEnabled = true
+                            binding.verifyButton.text = "Verify"
+                            if (result.message == "Wrong") {
+                                otpInputs.forEach { it.setBackgroundResource(R.drawable.otp_box_error) }
+                            }
+                        }
+                        else -> {
+                            binding.verifyButton.isEnabled = true
+                            binding.verifyButton.text = "Verify"
                         }
                     }
-                    else -> {
-                        binding.verifyButton.isEnabled = true
-                        binding.verifyButton.text = "Verify"
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.resendTimer.collect { seconds ->
+                    if (_binding == null) return@collect
+                    if (seconds > 0) {
+                        binding.timerText.visibility = View.VISIBLE
+                        binding.timerText.text = "00:${String.format("%02d", seconds)}"
+                    } else {
+                        binding.timerText.visibility = View.GONE
                     }
                 }
             }
         }
 
-        lifecycleScope.launch {
-            viewModel.resendTimer.collect { seconds ->
-                if (seconds > 0) {
-                    binding.timerText.visibility = View.VISIBLE
-                    binding.timerText.text = "00:${String.format("%02d", seconds)}"
-                } else {
-                    binding.timerText.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.canResend.collect { canResend ->
+                    if (_binding == null) return@collect
+                    binding.resendCodeText.isEnabled = canResend
+                    binding.resendCodeText.alpha = if (canResend) 1.0f else 0.5f
                 }
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.canResend.collect { canResend ->
-                binding.resendCodeText.isEnabled = canResend
-                binding.resendCodeText.alpha = if (canResend) 1.0f else 0.5f
             }
         }
     }
 
     private fun navigateOnSuccess() {
-        if (isFromSignUpArg) {
-            findNavController().navigate(R.id.action_verificationFragment_to_loginFragment)
-        } else {
-            val code = viewModel.otpCode.value
-            val bundle = Bundle().apply {
-                putString("email", emailArg)
-                putString("code", code)
+        try {
+            val navController = findNavController()
+            if (isFromSignUpArg) {
+                // ✅ Sign-up flow: login-ə get
+                navController.navigate(R.id.action_verificationFragment_to_loginFragment)
+            } else {
+                // ✅ Forgot password flow: OTP kodunu bundle ilə reset password-a göndər
+                val code = viewModel.otpCode.value
+                val bundle = Bundle().apply {
+                    putString("email", emailArg)
+                    putString("code", code)
+                }
+                navController.navigate(
+                    R.id.action_verificationFragment_to_resetPasswordFragment, bundle
+                )
             }
-            findNavController().navigate(
-                R.id.action_verificationFragment_to_resetPasswordFragment, bundle
-            )
+        } catch (e: Exception) {
+            // Navigation artıq baş vermişsə və ya fragment detach olubsa ignore et
         }
     }
 

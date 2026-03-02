@@ -42,7 +42,7 @@ class ResetPaswordFragment : Fragment() {
     private fun getArgumentsFromBundle() {
         arguments?.let { bundle ->
             emailArg = bundle.getString("email", "")
-            codeArg = bundle.getString("code", "") // ✅ Added
+            codeArg = bundle.getString("code", "")
         }
     }
 
@@ -50,7 +50,6 @@ class ResetPaswordFragment : Fragment() {
         binding.resetPasswordButton.setOnClickListener {
             val newPassword = binding.newPasswordEditText.text.toString().trim()
             val confirmPassword = binding.confirmPasswordEditText.text.toString().trim()
-            // ✅ Fixed: pass codeArg
             viewModel.resetPassword(emailArg, codeArg, newPassword, confirmPassword)
         }
         binding.backButton.setOnClickListener {
@@ -70,7 +69,10 @@ class ResetPaswordFragment : Fragment() {
                         binding.resetPasswordButton.isEnabled = true
                         binding.resetPasswordButton.text = "Reset Password"
                         viewModel.resetState()
-                        findNavController().navigate(R.id.action_resetPasswordFragment_to_loginFragment)
+                        // ✅ Login ekranına yönləndir və bütün back stack-i təmizlə
+                        findNavController().navigate(
+                            R.id.action_resetPasswordFragment_to_loginFragment
+                        )
                     }
                     is AuthResult.Error -> {
                         binding.resetPasswordButton.isEnabled = true

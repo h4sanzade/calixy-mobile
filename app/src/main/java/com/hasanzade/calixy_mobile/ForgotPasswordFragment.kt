@@ -70,9 +70,11 @@ class ForgotPasswordFragment : Fragment() {
                         val email = binding.emailEditText.text.toString().trim()
                         val bundle = Bundle().apply {
                             putString("email", email)
+                            putBoolean("isFromSignUp", false) // forgot password flow
                         }
+                        // ✅ Əvvəlcə OTP ekranına yönləndir
                         findNavController().navigate(
-                            R.id.resetPasswordFragment, bundle
+                            R.id.action_forgotPasswordFragment_to_verificationFragment, bundle
                         )
                         viewModel.resetAuthState()
                     }

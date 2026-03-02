@@ -49,6 +49,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
     </fragment>
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.hasanzade.calixy_mobile.HomeFragment"
@@ -66,17 +67,8 @@
             app:exitAnim="@anim/slide_out_left"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
     </fragment>
 
-    <action
-        android:id="@+id/action_dialogPasswordChangedFragment_to_loginFragment"
-        app:destination="@id/loginFragment" />
-    <action
-        android:id="@+id/action_resetPasswordFragment_to_loginFragment"
-        app:destination="@id/loginFragment" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.hasanzade.calixy_mobile.LoginFragment"
@@ -92,6 +84,11 @@
             app:destination="@id/signUpDefaultFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -99,6 +96,7 @@
         android:name="com.hasanzade.calixy_mobile.ForgotPasswordFragment"
         android:label="ForgotPasswordFragment"
         tools:layout="@layout/fragment_forgot_password" >
+        <!-- ✅ Email daxil edəndən sonra OTP ekranına get -->
         <action
             android:id="@+id/action_forgotPasswordFragment_to_verificationFragment"
             app:destination="@id/verificationFragment"
@@ -125,6 +123,7 @@
             android:name="isFromSignUp"
             app:argType="boolean"
             android:defaultValue="false" />
+        <!-- ✅ OTP doğrulandıqdan sonra reset password ekranına get -->
         <action
             android:id="@+id/action_verificationFragment_to_resetPasswordFragment"
             app:destination="@id/resetPasswordFragment"
@@ -147,6 +146,14 @@
         <argument
             android:name="email"
             app:argType="string" />
+        <!-- ✅ Şifrə sıfırlandıqdan sonra login ekranına get, bütün stack təmizlənsin -->
+        <action
+            android:id="@+id/action_resetPasswordFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_resetPasswordFragment_to_dialogPasswordChangedFragment"
             app:destination="@id/dialogPasswordChangedFragment"

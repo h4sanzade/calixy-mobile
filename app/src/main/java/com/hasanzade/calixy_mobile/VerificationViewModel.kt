@@ -42,7 +42,7 @@ class VerificationViewModel(
         }
 
         if (isFromSignUp) {
-            // ✅ Sign-up flow: backend-ə verify-email göndər
+            // Sign-up flow: backend-ə verify-email göndər
             viewModelScope.launch {
                 authRepository.verifyEmail(currentEmail, _otpCode.value).collect {
                     _verificationState.value = it
@@ -60,10 +60,10 @@ class VerificationViewModel(
         currentEmail = email
         viewModelScope.launch {
             authRepository.resendVerification(email).collect { result ->
-                if (result is AuthResult.Success) {
-                    startResendTimer()
-                } else if (result is AuthResult.Error) {
-                    _verificationState.value = result
+                when (result) {
+                    is AuthResult.Success -> startResendTimer()
+                    is AuthResult.Error -> _verificationState.value = result
+                    else -> {}
                 }
             }
         }
