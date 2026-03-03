@@ -41,6 +41,17 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
+    private val _googleAuthState = MutableStateFlow<AuthResult?>(null)
+    val googleAuthState: StateFlow<AuthResult?> = _googleAuthState
+    fun signInWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            authRepository.googleLogin(idToken).collect {
+                _authState.value = it
+            }
+        }
+    }
+    fun resetGoogleAuthState() { _googleAuthState.value = null }
+
 
     fun sendPasswordReset(email: String) {
         if (isValidEmail(email)) {

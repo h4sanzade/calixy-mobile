@@ -122,4 +122,6 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+
 }

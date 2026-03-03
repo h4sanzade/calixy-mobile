@@ -23,6 +23,27 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    fun googleLogin(idToken: String): Flow<AuthResult> = flow {
+        emit(AuthResult.Loading)
+        try {
+            val response = apiService.googleLogin(GoogleLoginRequest(idToken))
+            if (response.isSuccessful) {
+                val body = response.body()
+                val accessToken = body?.accessToken ?: ""
+                val refreshToken = body?.refreshToken ?: ""
+                val user = body?.user
+                val email = user?.email ?: ""
+                val fullName = "${user?.firstName.orEmpty()} ${user?.lastName.orEmpty()}".trim()
+                userPreferences.saveUserData(email, fullName, accessToken, refreshToken)
+                emit(AuthResult.Success)
+            } else {
+                emit(AuthResult.Error(parseError(response.code())))
+            }
+        } catch (e: Exception) {
+            emit(AuthResult.Error(networkError(e)))
+        }
+    }
+
     fun login(email: String, password: String): Flow<AuthResult> = flow {
         emit(AuthResult.Loading)
         try {
