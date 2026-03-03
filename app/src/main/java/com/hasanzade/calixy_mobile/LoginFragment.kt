@@ -1,6 +1,5 @@
 package com.hasanzade.calixy_mobile
 
-import android.app.Activity
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -13,7 +12,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -34,6 +35,7 @@ class LoginFragment : Fragment() {
     }
 
     private lateinit var googleSignInClient: GoogleSignInClient
+
     private val googleSignInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -44,10 +46,16 @@ class LoginFragment : Fragment() {
             if (idToken != null) {
                 viewModel.signInWithGoogle(idToken)
             } else {
-                Toast.makeText(requireContext(), "Google token alınmadı", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Token null!", Toast.LENGTH_LONG).show()
             }
         } catch (e: ApiException) {
-            Toast.makeText(requireContext(), "Google giriş uğursuz: ${e.statusCode}", Toast.LENGTH_SHORT).show()
+            // Ətraflı xəta məlumatı
+            Toast.makeText(
+                requireContext(),
+                "Kod: ${e.statusCode}\nMessaj: ${e.message}\nStatus: ${e.status}",
+                Toast.LENGTH_LONG
+            ).show()
+            android.util.Log.e("GOOGLE_SIGN_IN", "Error: ${e.statusCode} - ${e.message} - ${e.status}")
         }
     }
 
@@ -114,72 +122,62 @@ class LoginFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        lifecycleScope.launch {
-            viewModel.authState.collect { result ->
-                when (result) {
-                    is AuthResult.Loading -> {
-                        binding.loginButton.isEnabled = false
-                        binding.loginButton.text = "Logging in..."
-                    }
-                    is AuthResult.Success -> {
-                        binding.loginButton.isEnabled = true
-                        binding.loginButton.text = "Log In"
-                        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-                        viewModel.resetAuthState()
-                    }
-                    is AuthResult.Error -> {
-                        binding.loginButton.isEnabled = true
-                        binding.loginButton.text = "Log In"
-                    }
-                    else -> {
-                        binding.loginButton.isEnabled = true
-                        binding.loginButton.text = "Log In"
+        // FIX: Həm login həm Google nəticəsi eyni _authState-dən gəlir
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.authState.collect { result ->
+                    when (result) {
+                        is AuthResult.Loading -> {
+                            binding.loginButton.isEnabled = false
+                            binding.loginButton.text = "Logging in..."
+                            binding.googleButton.isEnabled = false
+                        }
+                        is AuthResult.Success -> {
+                            binding.loginButton.isEnabled = true
+                            binding.loginButton.text = "Log In"
+                            binding.googleButton.isEnabled = true
+                            viewModel.resetAuthState()
+                            if (isAdded && _binding != null) {
+                                findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                            }
+                        }
+                        is AuthResult.Error -> {
+                            binding.loginButton.isEnabled = true
+                            binding.loginButton.text = "Log In"
+                            binding.googleButton.isEnabled = true
+                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            binding.loginButton.isEnabled = true
+                            binding.loginButton.text = "Log In"
+                            binding.googleButton.isEnabled = true
+                        }
                     }
                 }
             }
         }
 
-        lifecycleScope.launch {
-            viewModel.loginValidation.collect { validation ->
-                if (validation.emailError != null) {
-                    binding.emailInputLayout.error = validation.emailError
-                    binding.emailInputLayout.boxStrokeColor =
-                        ContextCompat.getColor(requireContext(), R.color.red)
-                } else {
-                    binding.emailInputLayout.error = null
-                    binding.emailInputLayout.boxStrokeColor =
-                        ContextCompat.getColor(requireContext(), R.color.gray)
-                }
-                if (validation.passwordError != null) {
-                    binding.passwordInputLayout.error = validation.passwordError
-                    binding.passwordInputLayout.boxStrokeColor =
-                        ContextCompat.getColor(requireContext(), R.color.red)
-                } else {
-                    binding.passwordInputLayout.error = null
-                    binding.passwordInputLayout.boxStrokeColor =
-                        ContextCompat.getColor(requireContext(), R.color.gray)
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.googleAuthState.collect { result ->
-                when (result) {
-                    is AuthResult.Loading -> {
-                        binding.googleButton.isEnabled = false
+        // Login validation xətaları
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.loginValidation.collect { validation ->
+                    if (validation.emailError != null) {
+                        binding.emailInputLayout.error = validation.emailError
+                        binding.emailInputLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.red)
+                    } else {
+                        binding.emailInputLayout.error = null
+                        binding.emailInputLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.gray)
                     }
-                    is AuthResult.Success -> {
-                        binding.googleButton.isEnabled = true
-                        viewModel.resetGoogleAuthState()
-                        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-                    }
-                    is AuthResult.Error -> {
-                        binding.googleButton.isEnabled = true
-                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
-                        viewModel.resetGoogleAuthState()
-                    }
-                    else -> {
-                        binding.googleButton.isEnabled = true
+                    if (validation.passwordError != null) {
+                        binding.passwordInputLayout.error = validation.passwordError
+                        binding.passwordInputLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.red)
+                    } else {
+                        binding.passwordInputLayout.error = null
+                        binding.passwordInputLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.gray)
                     }
                 }
             }

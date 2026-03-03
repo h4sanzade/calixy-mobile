@@ -12,7 +12,20 @@
           "package_name": "com.hasanzade.calixy_mobile"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1067076548176-so5rctuh5875er02cpnv3asvb7rkv43k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hasanzade.calixy_mobile",
+            "certificate_hash": "30d09eddfed9188361db274f17d92e30437e8add"
+          }
+        },
+        {
+          "client_id": "1067076548176-ofo29509ktmo31j2nsahq20bv9g6sao2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAIeZVt_XUsF-yi1sjh0ZRMqtPbAapfkT8"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1067076548176-ofo29509ktmo31j2nsahq20bv9g6sao2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

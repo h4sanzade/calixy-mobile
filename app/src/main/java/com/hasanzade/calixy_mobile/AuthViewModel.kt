@@ -41,8 +41,8 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
-    private val _googleAuthState = MutableStateFlow<AuthResult?>(null)
-    val googleAuthState: StateFlow<AuthResult?> = _googleAuthState
+
+    // FIX: artıq _authState-ə yazır, _googleAuthState silindi
     fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
             authRepository.googleLogin(idToken).collect {
@@ -50,8 +50,6 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
-    fun resetGoogleAuthState() { _googleAuthState.value = null }
-
 
     fun sendPasswordReset(email: String) {
         if (isValidEmail(email)) {
@@ -103,6 +101,7 @@ class AuthViewModel @Inject constructor(
     private fun isValidEmail(email: String) = Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
     fun resetAuthState() { _authState.value = null }
+
     fun clearValidationErrors() {
         _loginValidation.value = LoginValidation()
         _signUpValidation.value = SignUpValidation()

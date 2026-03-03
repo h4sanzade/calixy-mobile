@@ -49,10 +49,11 @@ class AuthRepository @Inject constructor(
         try {
             val response = apiService.login(LoginRequest(email, password))
             if (response.isSuccessful) {
-                val body = response.body()
+                val body = response.body() as? AuthResponse
                 val accessToken = body?.accessToken ?: ""
                 val refreshToken = body?.refreshToken ?: ""
                 val user = body?.user
+                val email = user?.email ?: ""
                 val fullName = "${user?.firstName.orEmpty()} ${user?.lastName.orEmpty()}".trim()
                 userPreferences.saveUserData(email, fullName, accessToken, refreshToken)
                 emit(AuthResult.Success)
