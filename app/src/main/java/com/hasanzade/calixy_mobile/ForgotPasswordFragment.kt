@@ -64,7 +64,7 @@ class ForgotPasswordFragment : Fragment() {
                     }
                     is AuthResult.Success -> {
                         binding.resetLinkButton.isEnabled = true
-                        binding.resetLinkButton.text = "Send Reset Link"
+                        binding.resetLinkButton.text = "Send OTP Code"
                         clearEmailError()
 
                         val email = binding.emailEditText.text.toString().trim()
@@ -72,7 +72,7 @@ class ForgotPasswordFragment : Fragment() {
                             putString("email", email)
                             putBoolean("isFromSignUp", false) // forgot password flow
                         }
-                        // ✅ Əvvəlcə OTP ekranına yönləndir
+
                         findNavController().navigate(
                             R.id.action_forgotPasswordFragment_to_verificationFragment, bundle
                         )
@@ -80,12 +80,12 @@ class ForgotPasswordFragment : Fragment() {
                     }
                     is AuthResult.Error -> {
                         binding.resetLinkButton.isEnabled = true
-                        binding.resetLinkButton.text = "Send Reset Link"
+                        binding.resetLinkButton.text = "Send OTP Code"
                         showEmailError(result.message)
                     }
                     else -> {
                         binding.resetLinkButton.isEnabled = true
-                        binding.resetLinkButton.text = "Send Reset Link"
+                        binding.resetLinkButton.text = "Send OTP Code"
                     }
                 }
             }

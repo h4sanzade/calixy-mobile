@@ -35,8 +35,7 @@ class AuthViewModel @Inject constructor(
     fun signUp(email: String, password: String, confirmPassword: String) {
         if (validateSignUpInput(email, password, confirmPassword)) {
             viewModelScope.launch {
-                // Register üçün firstName/lastName boş göndəririk və ya backend tələb etmirsə
-                authRepository.register(email, password).collect {
+                authRepository.register(email, password, confirmPassword).collect {
                     _authState.value = it
                 }
             }
