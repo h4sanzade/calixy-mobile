@@ -32,17 +32,17 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signUp(email: String, password: String, firstName: String, lastName: String) {
-        if (validateSignUpInput(email, password, firstName, lastName)) {
+    fun signUp(email: String, password: String, confirmPassword: String) {
+        if (validateSignUpInput(email, password, confirmPassword)) {
             viewModelScope.launch {
-                authRepository.register(firstName, lastName, email, password).collect {
+                // Register üçün firstName/lastName boş göndəririk və ya backend tələb etmirsə
+                authRepository.register(email, password).collect {
                     _authState.value = it
                 }
             }
         }
     }
 
-    // FIX: artıq _authState-ə yazır, _googleAuthState silindi
     fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
             authRepository.googleLogin(idToken).collect {
@@ -83,19 +83,19 @@ class AuthViewModel @Inject constructor(
     private fun validateSignUpInput(
         email: String,
         password: String,
-        firstName: String,
-        lastName: String
+        confirmPassword: String
     ): Boolean {
-        val firstNameError = if (firstName.isBlank()) "First name is required" else null
-        val lastNameError = if (lastName.isBlank()) "Last name is required" else null
         val emailError = if (email.isBlank()) "Email is required"
         else if (!isValidEmail(email)) "Please enter correct email"
         else null
         val passwordError = if (password.isBlank()) "Password is required"
         else if (password.length < 6) "Password must be at least 6 characters"
         else null
-        _signUpValidation.value = SignUpValidation(firstNameError, lastNameError, emailError, passwordError)
-        return firstNameError == null && lastNameError == null && emailError == null && passwordError == null
+        val confirmPasswordError = if (confirmPassword.isBlank()) "Confirm password is required"
+        else if (password != confirmPassword) "Passwords don't match"
+        else null
+        _signUpValidation.value = SignUpValidation(emailError, passwordError, confirmPasswordError)
+        return emailError == null && passwordError == null && confirmPasswordError == null
     }
 
     private fun isValidEmail(email: String) = Patterns.EMAIL_ADDRESS.matcher(email).matches()
@@ -114,8 +114,7 @@ data class LoginValidation(
 )
 
 data class SignUpValidation(
-    val firstNameError: String? = null,
-    val lastNameError: String? = null,
     val emailError: String? = null,
-    val passwordError: String? = null
+    val passwordError: String? = null,
+    val confirmPasswordError: String? = null
 )

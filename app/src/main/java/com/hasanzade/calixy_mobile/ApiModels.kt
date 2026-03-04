@@ -1,7 +1,7 @@
 package com.hasanzade.calixy_mobile
 
 
-data class RegisterRequest(val firstName: String, val lastName: String, val email: String, val password: String)
+data class RegisterRequest(val email: String, val password: String)
 data class LoginRequest(val email: String, val password: String)
 data class VerifyEmailRequest(val email: String, val code: String)
 data class ResendVerificationRequest(val email: String)

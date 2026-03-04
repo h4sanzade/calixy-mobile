@@ -12,10 +12,10 @@ class AuthRepository @Inject constructor(
     val userPreferences: UserPreferences
 ) {
 
-    fun register(firstName: String, lastName: String, email: String, password: String): Flow<AuthResult> = flow {
+    fun register(email: String, password: String): Flow<AuthResult> = flow {
         emit(AuthResult.Loading)
         try {
-            val response = apiService.register(RegisterRequest(firstName, lastName, email, password))
+            val response = apiService.register(RegisterRequest(email, password))
             if (response.isSuccessful) emit(AuthResult.Success)
             else emit(AuthResult.Error(parseError(response.code())))
         } catch (e: Exception) {

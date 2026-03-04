@@ -58,8 +58,8 @@ class SignUpDefaultFragment : Fragment() {
         binding.signUpButton.setOnClickListener {
             val email = binding.emailSignupEditText.text.toString().trim()
             val password = binding.passwordSignupEditText.text.toString().trim()
-            val confirmpassword = binding.passwordConfirmEditText.text.toString().trim()
-            viewModel.signUp(email, password, confirmpassword)
+            val confirmPassword = binding.passwordConfirmEditText.text.toString().trim()
+            viewModel.signUp(email, password, confirmPassword)
         }
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
@@ -107,7 +107,7 @@ class SignUpDefaultFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.signUpValidation.collect { validation ->
-
+                    // Email validation
                     if (validation.emailError != null) {
                         binding.emailSignupLayout.error = validation.emailError
                         binding.emailSignupLayout.boxStrokeColor =
@@ -117,6 +117,7 @@ class SignUpDefaultFragment : Fragment() {
                         binding.emailSignupLayout.boxStrokeColor =
                             ContextCompat.getColor(requireContext(), R.color.gray)
                     }
+                    // Password validation
                     if (validation.passwordError != null) {
                         binding.passwordSignupLayout.error = validation.passwordError
                         binding.passwordSignupLayout.boxStrokeColor =
@@ -124,6 +125,16 @@ class SignUpDefaultFragment : Fragment() {
                     } else {
                         binding.passwordSignupLayout.error = null
                         binding.passwordSignupLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.gray)
+                    }
+                    // Confirm password validation
+                    if (validation.confirmPasswordError != null) {
+                        binding.confirmPasswordLayout.error = validation.confirmPasswordError
+                        binding.confirmPasswordLayout.boxStrokeColor =
+                            ContextCompat.getColor(requireContext(), R.color.red)
+                    } else {
+                        binding.confirmPasswordLayout.error = null
+                        binding.confirmPasswordLayout.boxStrokeColor =
                             ContextCompat.getColor(requireContext(), R.color.gray)
                     }
                 }
