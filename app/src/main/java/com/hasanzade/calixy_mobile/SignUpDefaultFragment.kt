@@ -56,11 +56,10 @@ class SignUpDefaultFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.signUpButton.setOnClickListener {
-            val firstName = binding.firstNameEditText.text.toString().trim()
-            val lastName = binding.lastNameEditText.text.toString().trim()
             val email = binding.emailSignupEditText.text.toString().trim()
             val password = binding.passwordSignupEditText.text.toString().trim()
-            viewModel.signUp(email, password, firstName, lastName)
+            val confirmpassword = binding.passwordConfirmEditText.text.toString().trim()
+            viewModel.signUp(email, password, confirmpassword)
         }
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
@@ -108,24 +107,7 @@ class SignUpDefaultFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.signUpValidation.collect { validation ->
-                    if (validation.firstNameError != null) {
-                        binding.firstNameLayout.error = validation.firstNameError
-                        binding.firstNameLayout.boxStrokeColor =
-                            ContextCompat.getColor(requireContext(), R.color.red)
-                    } else {
-                        binding.firstNameLayout.error = null
-                        binding.firstNameLayout.boxStrokeColor =
-                            ContextCompat.getColor(requireContext(), R.color.gray)
-                    }
-                    if (validation.lastNameError != null) {
-                        binding.lastNameLayout.error = validation.lastNameError
-                        binding.lastNameLayout.boxStrokeColor =
-                            ContextCompat.getColor(requireContext(), R.color.red)
-                    } else {
-                        binding.lastNameLayout.error = null
-                        binding.lastNameLayout.boxStrokeColor =
-                            ContextCompat.getColor(requireContext(), R.color.gray)
-                    }
+
                     if (validation.emailError != null) {
                         binding.emailSignupLayout.error = validation.emailError
                         binding.emailSignupLayout.boxStrokeColor =

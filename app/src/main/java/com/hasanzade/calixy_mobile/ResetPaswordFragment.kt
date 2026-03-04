@@ -69,9 +69,8 @@ class ResetPaswordFragment : Fragment() {
                         binding.resetPasswordButton.isEnabled = true
                         binding.resetPasswordButton.text = "Reset Password"
                         viewModel.resetState()
-                        // ✅ Login ekranına yönləndir və bütün back stack-i təmizlə
                         findNavController().navigate(
-                            R.id.action_resetPasswordFragment_to_loginFragment
+                            R.id.action_resetPasswordFragment_to_dialogPasswordChangedFragment
                         )
                     }
                     is AuthResult.Error -> {

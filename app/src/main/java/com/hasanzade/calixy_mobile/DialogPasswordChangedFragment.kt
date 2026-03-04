@@ -69,7 +69,7 @@ class DialogPasswordChangedFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.85).toInt(),
+            (resources.displayMetrics.widthPixels * 0.90).toInt(),
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
