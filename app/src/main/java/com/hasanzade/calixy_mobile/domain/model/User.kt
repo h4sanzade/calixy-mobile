@@ -1,4 +1,4 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.domain.model
 
 data class User(
     val id: String = "",

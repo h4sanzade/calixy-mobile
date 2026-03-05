@@ -1,4 +1,4 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.data.local
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

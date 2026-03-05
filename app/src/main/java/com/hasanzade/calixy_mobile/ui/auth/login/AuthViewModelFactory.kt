@@ -1,7 +1,10 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.ui.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.hasanzade.calixy_mobile.domain.repository.AuthRepository
+import com.hasanzade.calixy_mobile.ui.auth.resetpassword.ResetPasswordViewModel
+import com.hasanzade.calixy_mobile.ui.auth.verification.VerificationViewModel
 
 class AuthViewModelFactory(
     private val authRepository: AuthRepository

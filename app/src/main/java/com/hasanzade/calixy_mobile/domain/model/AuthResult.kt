@@ -1,4 +1,4 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.domain.model
 
 sealed class AuthResult {
     object Success : AuthResult()

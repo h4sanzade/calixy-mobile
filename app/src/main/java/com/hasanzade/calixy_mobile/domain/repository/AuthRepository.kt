@@ -1,5 +1,18 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.domain.repository
 
+import com.hasanzade.calixy_mobile.data.remote.ApiService
+import com.hasanzade.calixy_mobile.data.remote.model.AuthResponse
+import com.hasanzade.calixy_mobile.domain.model.AuthResult
+import com.hasanzade.calixy_mobile.data.remote.model.ForgotPasswordRequest
+import com.hasanzade.calixy_mobile.data.remote.model.GoogleLoginRequest
+import com.hasanzade.calixy_mobile.data.remote.model.LoginRequest
+import com.hasanzade.calixy_mobile.data.remote.model.RefreshTokenRequest
+import com.hasanzade.calixy_mobile.data.remote.model.RegisterRequest
+import com.hasanzade.calixy_mobile.data.remote.model.ResendVerificationRequest
+import com.hasanzade.calixy_mobile.data.remote.model.ResetPasswordRequest
+import com.hasanzade.calixy_mobile.data.remote.model.UpdateMeRequest
+import com.hasanzade.calixy_mobile.data.local.UserPreferences
+import com.hasanzade.calixy_mobile.data.remote.model.VerifyEmailRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -12,16 +25,18 @@ class AuthRepository @Inject constructor(
     val userPreferences: UserPreferences
 ) {
 
-    fun register(email: String, password: String, confirmPassword: String): Flow<AuthResult> = flow {
-        emit(AuthResult.Loading)
-        try {
-            val response = apiService.register(RegisterRequest(email, password, confirmPassword))
-            if (response.isSuccessful) emit(AuthResult.Success)
-            else emit(AuthResult.Error(parseError(response.code())))
-        } catch (e: Exception) {
-            emit(AuthResult.Error(networkError(e)))
+    fun register(email: String, password: String, confirmPassword: String): Flow<AuthResult> =
+        flow {
+            emit(AuthResult.Loading)
+            try {
+                val response =
+                    apiService.register(RegisterRequest(email, password, confirmPassword))
+                if (response.isSuccessful) emit(AuthResult.Success)
+                else emit(AuthResult.Error(parseError(response.code())))
+            } catch (e: Exception) {
+                emit(AuthResult.Error(networkError(e)))
+            }
         }
-    }
 
     fun googleLogin(idToken: String): Flow<AuthResult> = flow {
         emit(AuthResult.Loading)
@@ -134,29 +149,30 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    fun updateMe(firstName: String, lastName: String, phoneNumber: String? = null): Flow<AuthResult> = flow {
-        emit(AuthResult.Loading)
-        try {
-            val accessToken = userPreferences.accessToken.first()
-            val response = apiService.updateMe(
-                "Bearer $accessToken",
-                UpdateMeRequest(firstName, lastName, phoneNumber)
-            )
-            if (response.isSuccessful) {
-                val user = response.body()
-                val fullName = "${user?.firstName.orEmpty()} ${user?.lastName.orEmpty()}".trim()
-                val email = userPreferences.userEmail.first()
-                val currentAccess = userPreferences.accessToken.first()
-                val currentRefresh = userPreferences.refreshToken.first()
-                userPreferences.saveUserData(email, fullName, currentAccess, currentRefresh)
-                emit(AuthResult.Success)
-            } else {
-                emit(AuthResult.Error(parseError(response.code())))
+    fun updateMe(firstName: String, lastName: String, phoneNumber: String? = null): Flow<AuthResult> =
+        flow {
+            emit(AuthResult.Loading)
+            try {
+                val accessToken = userPreferences.accessToken.first()
+                val response = apiService.updateMe(
+                    "Bearer $accessToken",
+                    UpdateMeRequest(firstName, lastName, phoneNumber)
+                )
+                if (response.isSuccessful) {
+                    val user = response.body()
+                    val fullName = "${user?.firstName.orEmpty()} ${user?.lastName.orEmpty()}".trim()
+                    val email = userPreferences.userEmail.first()
+                    val currentAccess = userPreferences.accessToken.first()
+                    val currentRefresh = userPreferences.refreshToken.first()
+                    userPreferences.saveUserData(email, fullName, currentAccess, currentRefresh)
+                    emit(AuthResult.Success)
+                } else {
+                    emit(AuthResult.Error(parseError(response.code())))
+                }
+            } catch (e: Exception) {
+                emit(AuthResult.Error(networkError(e)))
             }
-        } catch (e: Exception) {
-            emit(AuthResult.Error(networkError(e)))
         }
-    }
 
     suspend fun logout() {
         try {

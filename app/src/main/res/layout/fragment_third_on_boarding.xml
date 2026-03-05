@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#F27861"
-    tools:context=".ThirdOnBoardingFragment">
+    tools:context=".ui.onboarding.ThirdOnBoardingFragment">
 
     <ImageView
         android:id="@+id/onboarding_third_img"

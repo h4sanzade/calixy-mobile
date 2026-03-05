@@ -1,4 +1,4 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.ui.splash
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.hasanzade.calixy_mobile.AppModule
+import com.hasanzade.calixy_mobile.R
 import kotlinx.coroutines.launch
 
 class SplashFragment : Fragment() {

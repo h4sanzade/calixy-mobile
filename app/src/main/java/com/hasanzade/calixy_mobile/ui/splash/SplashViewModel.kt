@@ -1,7 +1,8 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.ui.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hasanzade.calixy_mobile.data.local.UserPreferences
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

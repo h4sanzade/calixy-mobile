@@ -1,4 +1,4 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.ui.auth.verification
 
 import android.os.Bundle
 import android.text.Editable
@@ -14,7 +14,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.hasanzade.calixy_mobile.AppModule
+import com.hasanzade.calixy_mobile.domain.model.AuthResult
+import com.hasanzade.calixy_mobile.R
 import com.hasanzade.calixy_mobile.databinding.FragmentLoginVerificationBinding
+import com.hasanzade.calixy_mobile.ui.auth.login.AuthViewModelFactory
 import kotlinx.coroutines.launch
 
 class VerificationFragment : Fragment() {

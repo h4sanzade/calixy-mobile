@@ -1,4 +1,4 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.ui.auth.resetpassword
 
 import android.app.Dialog
 import android.graphics.Color
@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
+import com.hasanzade.calixy_mobile.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

@@ -1,7 +1,9 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.ui.auth.resetpassword
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hasanzade.calixy_mobile.domain.repository.AuthRepository
+import com.hasanzade.calixy_mobile.domain.model.AuthResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

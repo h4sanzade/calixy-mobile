@@ -1,4 +1,4 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.ui.auth.resetpassword
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.hasanzade.calixy_mobile.AppModule
+import com.hasanzade.calixy_mobile.domain.model.AuthResult
+import com.hasanzade.calixy_mobile.R
 import com.hasanzade.calixy_mobile.databinding.FragmentForgotPasswordBinding
+import com.hasanzade.calixy_mobile.ui.auth.login.AuthViewModel
+import com.hasanzade.calixy_mobile.ui.auth.login.AuthViewModelFactory
 import kotlinx.coroutines.launch
 
 class ForgotPasswordFragment : Fragment() {

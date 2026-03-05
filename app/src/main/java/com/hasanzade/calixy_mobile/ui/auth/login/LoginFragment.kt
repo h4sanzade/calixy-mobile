@@ -1,9 +1,10 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.ui.auth.login
 
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.hasanzade.calixy_mobile.AppModule
+import com.hasanzade.calixy_mobile.domain.model.AuthResult
+import com.hasanzade.calixy_mobile.R
 import com.hasanzade.calixy_mobile.databinding.FragmentLoginBinding
 import kotlinx.coroutines.launch
 
@@ -55,7 +59,7 @@ class LoginFragment : Fragment() {
                 "Kod: ${e.statusCode}\nMessaj: ${e.message}\nStatus: ${e.status}",
                 Toast.LENGTH_LONG
             ).show()
-            android.util.Log.e("GOOGLE_SIGN_IN", "Error: ${e.statusCode} - ${e.message} - ${e.status}")
+            Log.e("GOOGLE_SIGN_IN", "Error: ${e.statusCode} - ${e.message} - ${e.status}")
         }
     }
 

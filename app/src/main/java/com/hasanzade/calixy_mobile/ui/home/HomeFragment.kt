@@ -1,6 +1,7 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.ui.home
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,7 @@ class HomeFragment : Fragment() {
         return TextView(requireContext()).apply {
             text = "Welcome Home! "
             textSize = 24f
-            gravity = android.view.Gravity.CENTER
+            gravity = Gravity.CENTER
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT

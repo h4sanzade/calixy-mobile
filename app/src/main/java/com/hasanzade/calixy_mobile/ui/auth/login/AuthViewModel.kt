@@ -1,8 +1,11 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.ui.auth.login
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hasanzade.calixy_mobile.domain.repository.AuthRepository
+import com.hasanzade.calixy_mobile.domain.model.AuthResult
+import com.hasanzade.calixy_mobile.data.local.UserPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

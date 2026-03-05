@@ -1,4 +1,4 @@
-package com.hasanzade.calixy_mobile
+package com.hasanzade.calixy_mobile.data.remote.model
 
 
 data class RegisterRequest(val email: String, val password: String, val confirmPassword: String)

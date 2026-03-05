@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splashScreenFragment"
-        android:name="com.hasanzade.calixy_mobile.SplashFragment"
+        android:name="com.hasanzade.calixy_mobile.ui.splash.SplashFragment"
         android:label="SplashScreenFragment"
         tools:layout="@layout/fragment_splash_screen" >
         <action
@@ -28,7 +28,7 @@
 
     <fragment
         android:id="@+id/firstOnBoardingFragment"
-        android:name="com.hasanzade.calixy_mobile.FirstOnBoardingFragment"
+        android:name="com.hasanzade.calixy_mobile.ui.onboarding.FirstOnBoardingFragment"
         android:label="FirstOnBoardingFragment"
         tools:layout="@layout/fragment_first_on_boarding" >
         <action
@@ -40,7 +40,7 @@
 
     <fragment
         android:id="@+id/secondOnBoardingFragment"
-        android:name="com.hasanzade.calixy_mobile.SecondOnBoardingFragment"
+        android:name="com.hasanzade.calixy_mobile.ui.onboarding.SecondOnBoardingFragment"
         android:label="SecondOnBoardingFragment"
         tools:layout="@layout/fragment_second_on_boarding" >
         <action
@@ -52,12 +52,12 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.hasanzade.calixy_mobile.HomeFragment"
+        android:name="com.hasanzade.calixy_mobile.ui.home.HomeFragment"
         android:label="Home" />
 
     <fragment
         android:id="@+id/thirdOnBoardingFragment"
-        android:name="com.hasanzade.calixy_mobile.ThirdOnBoardingFragment"
+        android:name="com.hasanzade.calixy_mobile.ui.onboarding.ThirdOnBoardingFragment"
         android:label="ThirdOnBoardingFragment"
         tools:layout="@layout/fragment_third_on_boarding" >
         <action
@@ -71,7 +71,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.hasanzade.calixy_mobile.LoginFragment"
+        android:name="com.hasanzade.calixy_mobile.ui.auth.login.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login" >
         <action
@@ -93,7 +93,7 @@
 
     <fragment
         android:id="@+id/forgotPasswordFragment"
-        android:name="com.hasanzade.calixy_mobile.ForgotPasswordFragment"
+        android:name="com.hasanzade.calixy_mobile.ui.auth.resetpassword.ForgotPasswordFragment"
         android:label="ForgotPasswordFragment"
         tools:layout="@layout/fragment_forgot_password" >
         <!-- ✅ Email daxil edəndən sonra OTP ekranına get -->
@@ -113,7 +113,7 @@
 
     <fragment
         android:id="@+id/verificationFragment"
-        android:name="com.hasanzade.calixy_mobile.VerificationFragment"
+        android:name="com.hasanzade.calixy_mobile.ui.auth.verification.VerificationFragment"
         android:label="VerificationFragment"
         tools:layout="@layout/fragment_login_verification" >
         <argument
@@ -140,7 +140,7 @@
 
     <fragment
         android:id="@+id/resetPasswordFragment"
-        android:name="com.hasanzade.calixy_mobile.ResetPaswordFragment"
+        android:name="com.hasanzade.calixy_mobile.ui.auth.resetpassword.ResetPaswordFragment"
         android:label="ResetPasswordFragment"
         tools:layout="@layout/fragment_reset_pasword" >
         <argument
@@ -177,7 +177,7 @@
 
     <fragment
         android:id="@+id/signUpDefaultFragment"
-        android:name="com.hasanzade.calixy_mobile.SignUpDefaultFragment"
+        android:name="com.hasanzade.calixy_mobile.ui.auth.signup.SignUpDefaultFragment"
         android:label="SignUpDefaultFragment"
         tools:layout="@layout/fragment_sign_up_default" >
         <action
