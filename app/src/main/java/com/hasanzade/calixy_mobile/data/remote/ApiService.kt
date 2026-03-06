@@ -9,6 +9,8 @@ import com.hasanzade.calixy_mobile.data.remote.model.RefreshTokenRequest
 import com.hasanzade.calixy_mobile.data.remote.model.RegisterRequest
 import com.hasanzade.calixy_mobile.data.remote.model.ResendVerificationRequest
 import com.hasanzade.calixy_mobile.data.remote.model.ResetPasswordRequest
+import com.hasanzade.calixy_mobile.data.remote.model.SetupProfileRequest
+import com.hasanzade.calixy_mobile.data.remote.model.SetupProfileResponse
 import com.hasanzade.calixy_mobile.data.remote.model.UpdateMeRequest
 import com.hasanzade.calixy_mobile.data.remote.model.UserResponse
 import com.hasanzade.calixy_mobile.data.remote.model.VerifyEmailRequest
@@ -17,11 +19,13 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface ApiService {
 
     @POST("auth/google")
     suspend fun googleLogin(@Body request: GoogleLoginRequest): Response<AuthResponse>
+
     @POST("auth/register")
     suspend fun register(@Body request: RegisterRequest): Response<AuthResponse>
 
@@ -54,4 +58,10 @@ interface ApiService {
         @Header("Authorization") accessToken: String,
         @Body request: UpdateMeRequest
     ): Response<UserResponse>
+
+    @PUT("users/me/setup-profile")
+    suspend fun setupProfile(
+        @Header("Authorization") accessToken: String,
+        @Body request: SetupProfileRequest
+    ): Response<SetupProfileResponse>
 }

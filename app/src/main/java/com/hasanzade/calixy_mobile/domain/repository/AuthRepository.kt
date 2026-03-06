@@ -10,12 +10,15 @@ import com.hasanzade.calixy_mobile.data.remote.model.RefreshTokenRequest
 import com.hasanzade.calixy_mobile.data.remote.model.RegisterRequest
 import com.hasanzade.calixy_mobile.data.remote.model.ResendVerificationRequest
 import com.hasanzade.calixy_mobile.data.remote.model.ResetPasswordRequest
+import com.hasanzade.calixy_mobile.data.remote.model.SetupProfileRequest
+import com.hasanzade.calixy_mobile.data.remote.model.SetupProfileResponse
 import com.hasanzade.calixy_mobile.data.remote.model.UpdateMeRequest
 import com.hasanzade.calixy_mobile.data.local.UserPreferences
 import com.hasanzade.calixy_mobile.data.remote.model.VerifyEmailRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,8 +32,7 @@ class AuthRepository @Inject constructor(
         flow {
             emit(AuthResult.Loading)
             try {
-                val response =
-                    apiService.register(RegisterRequest(email, password, confirmPassword))
+                val response = apiService.register(RegisterRequest(email, password, confirmPassword))
                 if (response.isSuccessful) emit(AuthResult.Success)
                 else emit(AuthResult.Error(parseError(response.code())))
             } catch (e: Exception) {
@@ -173,6 +175,13 @@ class AuthRepository @Inject constructor(
                 emit(AuthResult.Error(networkError(e)))
             }
         }
+
+    suspend fun setupProfile(
+        bearerToken: String,
+        request: SetupProfileRequest
+    ): Response<SetupProfileResponse> {
+        return apiService.setupProfile(bearerToken, request)
+    }
 
     suspend fun logout() {
         try {

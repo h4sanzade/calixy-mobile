@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#171717"
-    tools:context="com.hasanzade.SetupProfileSecond">
+    tools:context="com.hasanzade.SetupProfileFourth">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_top"
@@ -27,14 +27,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.12"/>
+        app:layout_constraintGuide_percent="0.06"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.88"/>
+        app:layout_constraintGuide_percent="0.94"/>
 
     <ImageButton
         android:id="@+id/back_button"
@@ -84,72 +84,44 @@
         android:layout_marginTop="20dp"/>
 
     <TextView
-        android:id="@+id/select_height_tv"
+        android:id="@+id/greeting_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Select your Height"
-        android:textColor="@color/white"
-        android:fontFamily="@font/space_medium"
-        android:textSize="16sp"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_step_progress_id"
-        android:layout_marginTop="20dp"/>
-
-    <TextView
-        android:id="@+id/select_height_sub_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Enter your height so we can better estimate your nutritional needs."
-        android:textColor="#B2B2B2"
-        android:gravity="center"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toStartOf="@id/guideline_end"
-        app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@id/select_height_tv"
-        android:layout_marginTop="8dp"/>
-
-    <TextView
-        android:id="@+id/height_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="164cm"
+        android:text="Hey 👋 Let's start\nwith your goals."
         android:textColor="@color/white"
         android:fontFamily="@font/space_bold"
-        android:textSize="52sp"
-        android:letterSpacing="-0.02"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/select_height_sub_tv"
-        app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
-        app:layout_constraintVertical_bias="0.38"
-        app:layout_constraintVertical_chainStyle="packed"/>
+        android:textSize="22sp"
+        android:lineSpacingMultiplier="1.2"
+        app:layout_constraintStart_toEndOf="@id/guideline_start"
+        app:layout_constraintEnd_toStartOf="@id/guideline_end"
+        app:layout_constraintTop_toBottomOf="@id/view_step_progress_id"
+        android:layout_marginTop="24dp"/>
 
-    <FrameLayout
-        android:id="@+id/ruler_container"
+    <TextView
+        android:id="@+id/subtitle_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Select up to three that are most important to you."
+        android:textColor="#888888"
+        android:textSize="13sp"
+        app:layout_constraintStart_toEndOf="@id/guideline_start"
+        app:layout_constraintEnd_toStartOf="@id/guideline_end"
+        app:layout_constraintTop_toBottomOf="@id/greeting_tv"
+        android:layout_marginTop="8dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/goals_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/height_label"
-        app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHeight_percent="0.14">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ruler_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:clipToPadding="false"/>
-
-        <View
-            android:layout_width="2dp"
-            android:layout_height="72dp"
-            android:layout_gravity="center"
-            android:background="@color/white"/>
-
-    </FrameLayout>
+        android:overScrollMode="never"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/subtitle_tv"
+        app:layout_constraintBottom_toTopOf="@id/next_button"
+        app:layout_constraintStart_toEndOf="@id/guideline_start"
+        app:layout_constraintEnd_toStartOf="@id/guideline_end"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/next_button"
