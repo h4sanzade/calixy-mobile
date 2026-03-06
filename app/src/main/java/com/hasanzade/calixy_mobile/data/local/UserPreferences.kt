@@ -21,6 +21,7 @@ class UserPreferences @Inject constructor(
         val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
         val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
+        val IS_PROFILE_SETUP = booleanPreferencesKey("is_profile_setup")
     }
 
     val isFirstLaunch: Flow<Boolean> = dataStore.data.map { it[IS_FIRST_LAUNCH] ?: true }
@@ -29,6 +30,7 @@ class UserPreferences @Inject constructor(
     val userName: Flow<String> = dataStore.data.map { it[USER_NAME] ?: "" }
     val accessToken: Flow<String> = dataStore.data.map { it[ACCESS_TOKEN] ?: "" }
     val refreshToken: Flow<String> = dataStore.data.map { it[REFRESH_TOKEN] ?: "" }
+    val isProfileSetup: Flow<Boolean> = dataStore.data.map { it[IS_PROFILE_SETUP] ?: false }
 
     suspend fun setFirstLaunchCompleted() {
         dataStore.edit { it[IS_FIRST_LAUNCH] = false }
@@ -42,6 +44,10 @@ class UserPreferences @Inject constructor(
             prefs[ACCESS_TOKEN] = accessToken
             prefs[REFRESH_TOKEN] = refreshToken
         }
+    }
+
+    suspend fun setProfileSetupCompleted() {
+        dataStore.edit { it[IS_PROFILE_SETUP] = true }
     }
 
     suspend fun clearUserData() {

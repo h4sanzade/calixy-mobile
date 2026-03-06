@@ -36,18 +36,16 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.94"/>
 
-    <!-- Back button -->
     <ImageButton
         android:id="@+id/back_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/back_button"
-        android:background="@drawable/back_button"
-        android:contentDescription="Back"
-        app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@id/guideline_top"/>
+        android:background="#171717"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline_top"
+        android:layout_marginStart="10dp"/>
 
-    <!-- Step progress bar -->
     <include
         android:id="@+id/view_step_progress_id"
         layout="@layout/view_step_progress"
@@ -58,7 +56,6 @@
         app:layout_constraintEnd_toStartOf="@id/guideline_end"
         android:layout_marginTop="18dp"/>
 
-    <!-- Title -->
     <TextView
         android:id="@+id/title_tv"
         android:layout_width="0dp"
@@ -73,7 +70,6 @@
         app:layout_constraintTop_toBottomOf="@id/view_step_progress_id"
         android:layout_marginTop="22dp"/>
 
-    <!-- Subtitle -->
     <TextView
         android:id="@+id/subtitle_tv"
         android:layout_width="0dp"
@@ -87,7 +83,6 @@
         app:layout_constraintTop_toBottomOf="@id/title_tv"
         android:layout_marginTop="8dp"/>
 
-    <!-- Activity options list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/activity_recycler"
         android:layout_width="0dp"
@@ -95,26 +90,12 @@
         android:overScrollMode="never"
         android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/subtitle_tv"
-        app:layout_constraintBottom_toTopOf="@id/bottom_bar"
+        app:layout_constraintBottom_toTopOf="@id/next_button"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
         app:layout_constraintEnd_toStartOf="@id/guideline_end"
         android:layout_marginTop="18dp"
         android:layout_marginBottom="8dp"/>
 
-    <!-- Bottom bar: back circle + next button -->
-    <LinearLayout
-        android:id="@+id/bottom_bar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintEnd_toStartOf="@id/guideline_end"
-        app:layout_constraintBottom_toTopOf="@id/guideline_bottom">
-
-
-
-    </LinearLayout>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/next_button"
         android:layout_width="0dp"

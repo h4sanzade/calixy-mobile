@@ -25,6 +25,7 @@ import com.hasanzade.calixy_mobile.AppModule
 import com.hasanzade.calixy_mobile.domain.model.AuthResult
 import com.hasanzade.calixy_mobile.R
 import com.hasanzade.calixy_mobile.databinding.FragmentLoginBinding
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
@@ -53,7 +54,6 @@ class LoginFragment : Fragment() {
                 Toast.makeText(requireContext(), "Token null!", Toast.LENGTH_LONG).show()
             }
         } catch (e: ApiException) {
-            // Ətraflı xəta məlumatı
             Toast.makeText(
                 requireContext(),
                 "Kod: ${e.statusCode}\nMessaj: ${e.message}\nStatus: ${e.status}",
@@ -126,7 +126,6 @@ class LoginFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        // FIX: Həm login həm Google nəticəsi eyni _authState-dən gəlir
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.authState.collect { result ->
@@ -142,7 +141,7 @@ class LoginFragment : Fragment() {
                             binding.googleButton.isEnabled = true
                             viewModel.resetAuthState()
                             if (isAdded && _binding != null) {
-                                findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                                navigateAfterLogin()
                             }
                         }
                         is AuthResult.Error -> {
@@ -161,7 +160,6 @@ class LoginFragment : Fragment() {
             }
         }
 
-        // Login validation xətaları
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.loginValidation.collect { validation ->
@@ -187,6 +185,19 @@ class LoginFragment : Fragment() {
             }
         }
     }
+
+    private fun navigateAfterLogin() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val userPreferences = AppModule.provideUserPreferences(requireContext())
+            val isProfileSetup = userPreferences.isProfileSetup.first()
+            if (isProfileSetup) {
+                findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+            } else {
+                findNavController().navigate(R.id.action_loginFragment_to_setupProfileFirstFragment)
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

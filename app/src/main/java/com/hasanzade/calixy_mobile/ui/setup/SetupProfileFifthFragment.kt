@@ -49,7 +49,6 @@ class SetupProfileFifth : Fragment() {
         val backTop = view.findViewById<View>(R.id.back_button)
         val nextButton = view.findViewById<MaterialButton>(R.id.next_button)
 
-        // Step progress — all 5 active
         val stepProgress = view.findViewById<View>(R.id.view_step_progress_id)
         stepProgress.findViewById<View>(R.id.step1).setBackgroundColor(android.graphics.Color.WHITE)
         stepProgress.findViewById<View>(R.id.step2).setBackgroundColor(android.graphics.Color.WHITE)
@@ -94,7 +93,6 @@ class SetupProfileFifth : Fragment() {
         recycler.itemAnimator = null
 
         backTop.setOnClickListener { findNavController().navigateUp() }
-        backBottom.setOnClickListener { findNavController().navigateUp() }
 
         nextButton.setOnClickListener {
             val option = selectedOption
@@ -146,8 +144,6 @@ class SetupProfileFifth : Fragment() {
         fun newInstance() = SetupProfileFifth()
     }
 }
-
-// ─── Adapter ─────────────────────────────────────────────────────────────────
 
 class ActivityAdapter(
     private val options: List<ActivityOption>,

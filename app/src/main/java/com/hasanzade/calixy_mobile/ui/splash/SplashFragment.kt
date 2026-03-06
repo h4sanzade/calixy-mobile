@@ -81,7 +81,7 @@ class SplashFragment : Fragment() {
                     is SplashNavigationState.NavigateToLogin ->
                         findNavController().navigate(R.id.action_splashScreenFragment_to_loginFragment)
                     is SplashNavigationState.NavigateToMain ->
-                        findNavController().navigate(R.id.action_splashScreenFragment_to_firstOnBoardingFragment)
+                        findNavController().navigate(R.id.action_splashScreenFragment_to_homeFragment)
                     else -> {}
                 }
             }
