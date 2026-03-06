@@ -6,7 +6,6 @@
     tools:context="com.hasanzade.SetupProfileFirstFragment"
     android:background="#171717">
 
-  <!-- Back Button -->
   <ImageButton
       android:id="@+id/back_button"
       android:layout_width="wrap_content"
@@ -18,7 +17,6 @@
       android:layout_marginTop="20dp"
       android:layout_marginStart="10dp"/>
 
-  <!-- Title -->
   <com.google.android.material.textview.MaterialTextView
       android:id="@+id/complete_profile_tv"
       android:layout_width="0dp"
@@ -64,7 +62,6 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"/>
 
-  <!-- Fill your information -->
   <TextView
       android:id="@+id/user_profile"
       android:layout_width="0dp"
@@ -81,7 +78,6 @@
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"/>
 
-  <!-- Profile Image — ekran genişliyinin %28-i, hər ekranda eyni nisbət -->
   <ImageView
       android:id="@+id/user_profile_image"
       android:layout_width="0dp"
@@ -95,7 +91,6 @@
       app:layout_constraintWidth_percent="0.28"
       app:layout_constraintDimensionRatio="1:1"/>
 
-  <!-- Add profile picture -->
   <TextView
       android:id="@+id/add_profile_pict_info"
       android:layout_width="wrap_content"
@@ -108,7 +103,6 @@
       app:layout_constraintTop_toBottomOf="@id/user_profile_image"
       android:layout_marginTop="3dp"/>
 
-  <!-- First Name — ekranın %46-sı -->
   <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/first_name_et"
       android:layout_width="0dp"
@@ -135,7 +129,6 @@
         android:singleLine="true"/>
   </com.google.android.material.textfield.TextInputLayout>
 
-  <!-- Last Name — ekranın %46-sı -->
   <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/last_name_et"
       android:layout_width="0dp"
@@ -191,7 +184,6 @@
         android:dropDownHeight="wrap_content"/>
   </com.google.android.material.textfield.TextInputLayout>
 
-  <!-- Date of Birth Label -->
   <TextView
       android:id="@+id/dob_label"
       android:layout_width="0dp"
@@ -206,7 +198,6 @@
       android:layout_marginStart="20dp"
       android:layout_marginEnd="20dp"/>
 
-  <!-- Date of Birth Card — tam genişlik, sabit hündürlük -->
   <androidx.cardview.widget.CardView
       android:id="@+id/dob_card"
       android:layout_width="0dp"
@@ -251,7 +242,6 @@
     </LinearLayout>
   </androidx.cardview.widget.CardView>
 
-  <!-- Next Button — sağ tərəfdə, ekranın %40-ı genişlik -->
   <com.google.android.material.button.MaterialButton
       android:id="@+id/next_button"
       android:layout_width="0dp"
