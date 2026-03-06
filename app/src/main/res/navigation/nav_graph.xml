@@ -84,9 +84,12 @@
             app:destination="@id/signUpDefaultFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
+        <!-- ✅ Login uğurlu → Setup Profile ekranı -->
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
+            app:destination="@id/setupProfileFirstFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
@@ -96,7 +99,6 @@
         android:name="com.hasanzade.calixy_mobile.ui.auth.resetpassword.ForgotPasswordFragment"
         android:label="ForgotPasswordFragment"
         tools:layout="@layout/fragment_forgot_password" >
-        <!-- ✅ Email daxil edəndən sonra OTP ekranına get -->
         <action
             android:id="@+id/action_forgotPasswordFragment_to_verificationFragment"
             app:destination="@id/verificationFragment"
@@ -123,7 +125,6 @@
             android:name="isFromSignUp"
             app:argType="boolean"
             android:defaultValue="false" />
-        <!-- ✅ OTP doğrulandıqdan sonra reset password ekranına get -->
         <action
             android:id="@+id/action_verificationFragment_to_resetPasswordFragment"
             app:destination="@id/resetPasswordFragment"
@@ -146,7 +147,6 @@
         <argument
             android:name="email"
             app:argType="string" />
-        <!-- ✅ Şifrə sıfırlandıqdan sonra login ekranına get, bütün stack təmizlənsin -->
         <action
             android:id="@+id/action_resetPasswordFragment_to_loginFragment"
             app:destination="@id/loginFragment"
@@ -192,6 +192,28 @@
             app:exitAnim="@anim/slide_out_right"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="false" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_setupProfileFirstFragment_to_loginFragment"
+        app:destination="@id/loginFragment"
+        app:enterAnim="@anim/slide_in_left"
+        app:exitAnim="@anim/slide_out_right"
+        app:popUpTo="@id/loginFragment"
+        app:popUpToInclusive="false" />
+
+    <fragment
+        android:id="@+id/setupProfileFirstFragment"
+        android:name="com.hasanzade.SetupProfileFirstFragment"
+        android:label="SetupProfileFirstFragment"
+        tools:layout="@layout/fragment_setup_profile_first" >
+        <action
+            android:id="@+id/action_setupProfileFirstFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

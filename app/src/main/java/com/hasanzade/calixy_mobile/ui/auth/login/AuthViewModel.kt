@@ -25,6 +25,8 @@ class AuthViewModel @Inject constructor(
     private val _signUpValidation = MutableStateFlow(SignUpValidation())
     val signUpValidation: StateFlow<SignUpValidation> = _signUpValidation
 
+    // ─── Auth ─────────────────────────────────────────────────────────────────
+
     fun signIn(email: String, password: String) {
         if (validateLoginInput(email, password)) {
             viewModelScope.launch {
@@ -65,19 +67,35 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    // ─── Profile Setup ────────────────────────────────────────────────────────
+
+    fun updateProfile(firstName: String, lastName: String, phoneNumber: String? = null) {
+        viewModelScope.launch {
+            authRepository.updateMe(firstName, lastName, phoneNumber).collect {
+                _authState.value = it
+            }
+        }
+    }
+
+    // ─── Onboarding ───────────────────────────────────────────────────────────
+
     fun completeOnboarding() {
         viewModelScope.launch {
             userPreferences.setFirstLaunchCompleted()
         }
     }
 
+    // ─── Validation ───────────────────────────────────────────────────────────
+
     private fun validateLoginInput(email: String, password: String): Boolean {
         val emailError = if (email.isBlank()) "Email is required"
         else if (!isValidEmail(email)) "Please enter correct email"
         else null
+
         val passwordError = if (password.isBlank()) "Password is required"
         else if (password.length < 6) "Please enter correct password"
         else null
+
         _loginValidation.value = LoginValidation(emailError, passwordError)
         return emailError == null && passwordError == null
     }
@@ -90,12 +108,15 @@ class AuthViewModel @Inject constructor(
         val emailError = if (email.isBlank()) "Email is required"
         else if (!isValidEmail(email)) "Please enter correct email"
         else null
+
         val passwordError = if (password.isBlank()) "Password is required"
         else if (password.length < 6) "Password must be at least 6 characters"
         else null
+
         val confirmPasswordError = if (confirmPassword.isBlank()) "Confirm password is required"
         else if (password != confirmPassword) "Passwords don't match"
         else null
+
         _signUpValidation.value = SignUpValidation(emailError, passwordError, confirmPasswordError)
         return emailError == null && passwordError == null && confirmPasswordError == null
     }
